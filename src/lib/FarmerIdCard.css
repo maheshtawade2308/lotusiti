@@ -71,7 +71,6 @@
   padding-top: 10px;
   color: white;
   text-align: center;
-  padding: 4px;
   height: 13mm;
 }
 
@@ -221,6 +220,17 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
+  .id-text {
+    display: flex !important;
+    align-items: baseline !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+  }
+
 
   body {
     margin: 0;
