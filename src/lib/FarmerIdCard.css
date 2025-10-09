@@ -75,11 +75,12 @@
 .logo-title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 40px;
 }
 
 .logo {
-  height: 30px;
+  height: 27px;
+  padding-left: 15px;
 }
 
 .title {
@@ -90,6 +91,7 @@
 
 .farmer-icon {
   height: 50px;
+  padding-right: 10px;
 }
 
 /* Photo & Details */
