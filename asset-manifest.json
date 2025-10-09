@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/lotusiti/static/css/main.feca762c.css",
+    "main.css": "/lotusiti/static/css/main.3d543824.css",
     "main.js": "/lotusiti/static/js/main.ab7b394b.js",
     "static/js/977.b37b8b41.chunk.js": "/lotusiti/static/js/977.b37b8b41.chunk.js",
     "static/js/455.cbfe2ddf.chunk.js": "/lotusiti/static/js/455.cbfe2ddf.chunk.js",
@@ -9,14 +9,14 @@
     "static/media/farmer.png": "/lotusiti/static/media/farmer.dfaccb008568b2e5ea4a.png",
     "static/media/leaves.png": "/lotusiti/static/media/leaves.f08e120f6367d7956501.png",
     "index.html": "/lotusiti/index.html",
-    "main.feca762c.css.map": "/lotusiti/static/css/main.feca762c.css.map",
+    "main.3d543824.css.map": "/lotusiti/static/css/main.3d543824.css.map",
     "main.ab7b394b.js.map": "/lotusiti/static/js/main.ab7b394b.js.map",
     "977.b37b8b41.chunk.js.map": "/lotusiti/static/js/977.b37b8b41.chunk.js.map",
     "455.cbfe2ddf.chunk.js.map": "/lotusiti/static/js/455.cbfe2ddf.chunk.js.map",
     "453.d9ee81d0.chunk.js.map": "/lotusiti/static/js/453.d9ee81d0.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.feca762c.css",
+    "static/css/main.3d543824.css",
     "static/js/main.ab7b394b.js"
   ]
 }
