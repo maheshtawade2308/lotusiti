@@ -1,0 +1,239 @@
+.id-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5rem;
+  align-items: center;
+}
+
+.id-card {
+  width: 100%;
+  height: 300px; 
+  background-color: #f5f9f6;
+  position: relative;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.id-card.front {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Push bottom-bar to the bottom */
+  height: 330px;
+  background: #e9f6e7;
+}
+
+.id-card.back {
+  background: #f3f8f2;
+  border-top: 8px solid #388e3c;
+  height: 330px;
+  padding: 15px 20px;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Push note to bottom */
+  position: relative;
+}
+
+.green-bar {
+  background-color: green;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  height: 15mm;
+}
+
+/* Bottom Section */
+.bottom {
+  margin-top: 10px;
+  border-top: 1px solid #c8e6c9;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.bottom-bar {
+  background-color: green;
+  margin-top: 10px;
+  padding-top: 10px;
+  color: white;
+  text-align: center;
+  padding: 4px;
+  height: 13mm;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  height: 30px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  /* color: #2e7d32; */
+}
+
+.farmer-icon {
+  height: 50px;
+}
+
+/* Photo & Details */
+.photo-section {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.photo-box {
+  width: 100px;
+  height: 100px;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.details {
+  margin-left: 20px;
+  flex: 1;
+  font-size: 14px;
+}
+
+.details p {
+  /* margin: 2px 0;         Reduces vertical spacing between lines */
+  line-height: 1.2;     
+}
+
+
+.leaves {
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  width: 100px;
+  /* opacity: 0.2; */
+}
+
+.qr-section {
+  text-align: right;
+  padding-right: 20px;
+  margin-top: 50px;
+}
+
+.id-text {
+  font-size: 20px;
+  color: #edf7ee;
+  font-weight: 600;
+  width: 100%
+}
+
+/* Back Side */
+.id-card.back h5 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  color: #2e7d32;
+}
+
+
+
+.land-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.land-table th, .land-table td {
+  border: 1px solid #c8e6c9;
+  text-align: center;
+  padding: 4px;
+}
+
+.note {
+  margin-top: 10px;
+  font-size: 10px;
+  text-align: center;
+  color: #777;
+}
+
+.leaves-bottom {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  width: 80px;
+  opacity: 0.3;
+}
+
+
+
+@media print {
+ 
+
+  .id-card-wrapper {
+    display: block;
+    margin: 0 auto;
+    width: 85.6mm;
+  }
+
+ .id-card {
+    width: 85.6mm;
+    height: 54mm;
+    box-shadow: none;
+    background-color: #f5f9f6 !important;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .green-bar,
+  .bottom-bar {
+    background-color: green !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .photo-section {
+    background-image: url('../assets/watermark.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Optional: Hide other UI elements during printing */
+  .btn, .form-control, .nav, .non-printable {
+    display: none !important;
+  }
+}
