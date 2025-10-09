@@ -7,9 +7,12 @@ function IdCardBack({ formData, landRecords = [] }) {
 
   return (
     <div className="id-card back" id="card-back">
-      <h5>संपूर्ण पत्ता / Address</h5>
-      <p>{address || "-----------"}</p>
+      <div className="address-section">
+    <h5>संपूर्ण पत्ता / Address</h5>
+    <p>{address || "-----------"}</p>
+  </div>
 
+    <div className="land-section">
       <h5>जमिनीची माहिती / Land Details</h5>
       {landRecords.length > 0 ? (
         <table className="land-table">
@@ -39,7 +42,7 @@ function IdCardBack({ formData, landRecords = [] }) {
       ) : (
         <p className="no-data">No land records available</p>
       )}
-
+</div>
       <div className="note">
         This card is only for personal use — not for Govt. identity.
       </div>

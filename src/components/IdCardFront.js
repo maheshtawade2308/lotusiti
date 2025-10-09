@@ -33,7 +33,7 @@ function IdCardFront({ formData }) {
           {photo ? <img src={photo} alt="Farmer" /> : <span>Photo</span>}
         </div>
         <div className="details">
-          <p><strong>नाव :</strong> {name_mr || "-----------"}</p>
+          <p style={{margin: "2px 0"}}><strong>नाव :</strong> {name_mr || "-----------"}</p>
           <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> {name_en || "-----------"}</p>
           <p><strong>जन्म दिनांक / DOB :</strong> {dob || "-----------"}</p>
           <p><strong>लिंग / Gender :</strong> {gender || "-----------"}</p>
