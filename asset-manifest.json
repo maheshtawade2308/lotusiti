@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/lotusiti/static/css/main.8983599d.css",
-    "main.js": "/lotusiti/static/js/main.6832d224.js",
+    "main.js": "/lotusiti/static/js/main.b8cbebea.js",
     "static/js/453.1cc05f2d.chunk.js": "/lotusiti/static/js/453.1cc05f2d.chunk.js",
     "static/media/watermark.png": "/lotusiti/static/media/watermark.51e01483d672e7561674.png",
     "static/media/farmer.png": "/lotusiti/static/media/farmer.dfaccb008568b2e5ea4a.png",
     "static/media/leaves.png": "/lotusiti/static/media/leaves.f08e120f6367d7956501.png",
     "index.html": "/lotusiti/index.html",
     "main.8983599d.css.map": "/lotusiti/static/css/main.8983599d.css.map",
-    "main.6832d224.js.map": "/lotusiti/static/js/main.6832d224.js.map",
+    "main.b8cbebea.js.map": "/lotusiti/static/js/main.b8cbebea.js.map",
     "453.1cc05f2d.chunk.js.map": "/lotusiti/static/js/453.1cc05f2d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8983599d.css",
-    "static/js/main.6832d224.js"
+    "static/js/main.b8cbebea.js"
   ]
 }
