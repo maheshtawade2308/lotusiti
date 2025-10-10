@@ -117,7 +117,6 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
 
   return (
     <form>
-      <ToastContainer />
       {/* Farmer ID */}
       <div className="mb-3">
         <label className="form-label">Farmer ID</label>

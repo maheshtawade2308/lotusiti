@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FormSection from './components/FormSection';
 import CardPreview from './components/CardPreview';
+import { ToastContainer, toast } from 'react-toastify';  // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
 
 function App() {
 
@@ -37,6 +39,7 @@ function App() {
 
   return (
     <div className="container mt-4">
+      <ToastContainer />
       <div className="row">
         <h2 className="text-danger">Generate Farmer ID Card</h2>
       </div>

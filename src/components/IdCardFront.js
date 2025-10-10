@@ -56,9 +56,9 @@ function IdCardFront({ formData }) {
           alignItems: "baseline", // Aligns text on the same line
           justifyContent: "center",
           gap: "10px",
-          fontSize: "20px",
+          fontSize: "35px",
           fontWeight: "600",
-          color: "#fff"
+          color: "#fff",
         }}>
           <span style={{ color: "yellow" }}>फार्मर आयडी :</span>
           <span>{id || "-----------"}</span>

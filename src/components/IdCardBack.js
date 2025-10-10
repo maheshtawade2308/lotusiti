@@ -8,45 +8,48 @@ function IdCardBack({ formData, landRecords = [] }) {
   return (
     <div className="id-card back" id="card-back">
       <div className="address-section">
-    <h5>संपूर्ण पत्ता / Address</h5>
-    <p>{address || "-----------"}</p>
-  </div>
+        <h5>संपूर्ण पत्ता / Address</h5>
+        <p>{address || "-----------"}</p>
+      </div>
 
-    <div className="land-section">
-      <h5>जमिनीची माहिती / Land Details</h5>
-      {landRecords.length > 0 ? (
-        <table className="land-table">
-          <thead>
-            <tr>
-              <th>जिल्हा</th>
-              <th>तालुका</th>
-              <th>गाव</th>
-              <th>खाते नं.</th>
-              <th>गट नं.</th>
-              <th>क्षेत्रफळ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {landRecords.map((record, index) => (
-              <tr key={index}>
-                <td>{record.district || "-"}</td>
-                <td>{record.taluka || "-"}</td>
-                <td>{record.village || "-"}</td>
-                <td>{record.accountNo || "-"}</td>
-                <td>{record.surveyNo || "-"}</td>
-                <td>{record.area || "-"}</td>
+      <div className="land-section">
+        <h5>जमिनीची माहिती / Land Details</h5>
+        {landRecords.length > 0 ? (
+          <table className="land-table">
+            <thead>
+              <tr>
+                <th>जिल्हा</th>
+                <th>तालुका</th>
+                <th>गाव</th>
+                <th>गट नं.</th>
+                <th>खाते नं.</th>
+                <th>क्षेत्रफळ</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="no-data">No land records available</p>
-      )}
-</div>
+            </thead>
+            <tbody>
+              {landRecords.map((record, index) => (
+                <tr key={index}>
+                  <td>{record.district || "-"}</td>
+                  <td>{record.taluka || "-"}</td>
+                  <td>{record.village || "-"}</td>
+                  <td>{record.accountNo || "-"}</td>
+                  <td>{record.surveyNo || "-"}</td>
+                  <td>{record.area || "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="no-data">No land records available</p>
+        )}
+      </div>
+      <div>
+      <img src={leaves} alt="leaves" className="leaves-bottom-left" />
       <div className="note">
-        This card is only for personal use — not for Govt. identity.
+        हे कार्ड वैयक्तिक वापरासाठी असून सरकारी ओळखपत्र म्हणून मान्य नाही.
       </div>
       <img src={leaves} alt="leaves" className="leaves-bottom" />
+      </div>
     </div>
   );
 }
