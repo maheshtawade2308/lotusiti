@@ -7,38 +7,53 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
   const handleChange = async (e) => {
     const { name, value, files } = e.target;
 
-    if (name === "name_en") {
+
+    if (name === "mobile") {
+      // Remove non-digit characters
+      let digits = value.replace(/\D/g, "");
+
+      // Limit to 10 digits
+      if (digits.length > 10) digits = digits.substring(0, 10);
+
       setFormData((prev) => ({
         ...prev,
-        name_en: value,
-      }));
-
-      try {
-        const response = await axios.get(
-          `https://inputtools.google.com/request?text=${value}&itc=mr-t-i0-und&num=1`
-        );
-
-        if (
-          response.data &&
-          response.data[0] === "SUCCESS" &&
-          response.data[1]?.[0]?.[1]?.[0]
-        ) {
-          const marathiText = response.data[1][0][1][0];
-
-          setFormData((prev) => ({
-            ...prev,
-            name_mr: marathiText,
-          }));
-        }
-      } catch (err) {
-        console.error("Transliteration Error:", err);
-      }
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: files ? URL.createObjectURL(files[0]) : value,
+        mobile: digits,
       }));
     }
+    else
+
+      if (name === "name_en") {
+        setFormData((prev) => ({
+          ...prev,
+          name_en: value,
+        }));
+
+        try {
+          const response = await axios.get(
+            `https://inputtools.google.com/request?text=${value}&itc=mr-t-i0-und&num=1`
+          );
+
+          if (
+            response.data &&
+            response.data[0] === "SUCCESS" &&
+            response.data[1]?.[0]?.[1]?.[0]
+          ) {
+            const marathiText = response.data[1][0][1][0];
+
+            setFormData((prev) => ({
+              ...prev,
+              name_mr: marathiText,
+            }));
+          }
+        } catch (err) {
+          console.error("Transliteration Error:", err);
+        }
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: files ? URL.createObjectURL(files[0]) : value,
+        }));
+      }
   };
 
   const handleAddLandRecord = () => {
@@ -85,28 +100,28 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
       id: formatted,
     }));
   }
-const setAddharNo = (e)=>{
-      let input = e.target.value;
+  const setAddharNo = (e) => {
+    let input = e.target.value;
 
-      // Remove all non-digit characters
-      input = input.replace(/\D/g, "");
+    // Remove all non-digit characters
+    input = input.replace(/\D/g, "");
 
-      // Format as groups of 4 digits
-      const formatted = input.match(/.{1,4}/g)?.join(" ") || "";
+    // Format as groups of 4 digits
+    const formatted = input.match(/.{1,4}/g)?.join(" ") || "";
 
-      setFormData((prev) => ({
-        ...prev,
-        aadhaar: formatted,
-      }));
-    }
-  
+    setFormData((prev) => ({
+      ...prev,
+      aadhaar: formatted,
+    }));
+  }
+
   return (
     <form>
       <ToastContainer />
       {/* Farmer ID */}
       <div className="mb-3">
         <label className="form-label">Farmer ID</label>
-        <input type="text"name="id" className="form-control" value={formData.id} onChange={handleFormerIdChange} />
+        <input type="text" name="id" className="form-control" value={formData.id} onChange={handleFormerIdChange} />
       </div>
       <div className="row">
         {/* Mobile & Aadhaar */}
@@ -180,7 +195,7 @@ const setAddharNo = (e)=>{
 
       {/* Land Details */}
       <div className="mb-3">
-        <h6 className="form-label text-danger">Land Details</h6>
+        <h4 className=" text-danger">Land Details</h4>
 
         <div className="row">
           <div className="col-md-6 mb-3">
