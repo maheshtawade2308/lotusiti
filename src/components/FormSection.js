@@ -1,14 +1,44 @@
 import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';  // Import ToastContainer and toast
 import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
+import axios from "axios";
 
 function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: files ? URL.createObjectURL(files[0]) : value,
-    }));
+
+    if (name === "name_en") {
+      setFormData((prev) => ({
+        ...prev,
+        name_en: value,
+      }));
+
+      try {
+        const response = await axios.get(
+          `https://inputtools.google.com/request?text=${value}&itc=mr-t-i0-und&num=1`
+        );
+
+        if (
+          response.data &&
+          response.data[0] === "SUCCESS" &&
+          response.data[1]?.[0]?.[1]?.[0]
+        ) {
+          const marathiText = response.data[1][0][1][0];
+
+          setFormData((prev) => ({
+            ...prev,
+            name_mr: marathiText,
+          }));
+        }
+      } catch (err) {
+        console.error("Transliteration Error:", err);
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: files ? URL.createObjectURL(files[0]) : value,
+      }));
+    }
   };
 
   const handleAddLandRecord = () => {
@@ -23,7 +53,7 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
     toast.success("Record added successfully");
 
     setLandRecords((prev) => [...prev, landData]);
-    
+
     // Clear land fields
     setFormData((prev) => ({
       ...prev,
@@ -68,56 +98,79 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
           }}
         />
       </div>
+      <div className="row">
+        {/* Mobile & Aadhaar */}
+        <div className="col-md-6 mb-3">
+          <label className="form-label">Aadhaar Number</label>
+          <input type="text" name="aadhaar" className="form-control" value={formData.aadhaar} onChange={handleChange} />
+        </div>
+        <div className="col-md-6 mb-3">
+          <label className="form-label">Mobile Number</label>
+          <input type="text" name="mobile" className="form-control" value={formData.mobile} onChange={handleChange} />
+        </div>
 
-      {/* Mobile & Aadhaar */}
-      <div className="mb-3">
-        <label className="form-label">Aadhaar Number</label>
-        <input type="text" name="aadhaar" className="form-control" value={formData.aadhaar} onChange={handleChange} />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Mobile Number</label>
-        <input type="text" name="mobile" className="form-control" value={formData.mobile} onChange={handleChange} />
+      <div className="row">
+        {/* Name Fields */}
+        <div className="col-md-6 mb-3">
+          <label className="form-label">Name (English)</label>
+          <input
+            type="text"
+            name="name_en"
+            className="form-control"
+            value={formData.name_en}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-md-6 mb-3">
+          <label className="form-label">Name (Marathi)</label>
+          <input
+            type="text"
+            name="name_mr"
+            className="form-control"
+            value={formData.name_mr}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                name_mr: e.target.value, // Allow manual edit
+              }))
+            }
+          />
+        </div>
       </div>
-
-      {/* Name Fields */}
-      <div className="mb-3">
-        <label className="form-label">Name (Marathi)</label>
-        <input type="text" name="name_mr" className="form-control" value={formData.name_mr} onChange={handleChange} />
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">Name (English)</label>
-        <input type="text" name="name_en" className="form-control" value={formData.name_en} onChange={handleChange} />
-      </div>
-
 
       {/* DOB & Gender */}
-      <div className="mb-3">
-        <label className="form-label">Date of Birth</label>
-        <input type="date" name="dob" className="form-control" value={formData.dob} onChange={handleChange} />
+      <div className="row">
+        <div className="col-md-6 mb-3">
+          <label className="form-label">Date of Birth</label>
+          <input type="date" name="dob" className="form-control" value={formData.dob} onChange={handleChange} />
+        </div>
+        <div className="col-md-6 mb-3">
+          <label className="form-label">Gender</label>
+          <select name="gender" className="form-select" value={formData.gender} onChange={handleChange}>
+            <option ></option>
+            <option value="Male">पुरुष / Male</option>
+            <option value="Female">स्त्री / Female</option>
+          </select>
+        </div>
       </div>
-      <div className="mb-3">
-        <label className="form-label">Gender</label>
-        <select name="gender" className="form-select" value={formData.gender} onChange={handleChange}>
-          <option ></option>
-          <option value="Male">पुरुष / Male</option>
-          <option value="Female">स्त्री / Female</option>
-        </select>
+      <div className="row">
+        {/* Address & Photo */}
+        <div className="col-md-6 mb-3">
+          <label className="form-label">Address</label>
+          <textarea name="address" className="form-control" value={formData.address} onChange={handleChange} />
+        </div>
+        <div className="col-md-6 mb-3">
+          <label className="form-label">Upload Photo</label>
+          <input type="file" name="photo" className="form-control" accept="image/*" onChange={handleChange} />
+        </div>
+
       </div>
 
-      {/* Address & Photo */}
-      <div className="mb-3">
-        <label className="form-label">Address</label>
-        <textarea name="address" className="form-control" value={formData.address} onChange={handleChange} />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">Upload Photo</label>
-        <input type="file" name="photo" className="form-control" accept="image/*" onChange={handleChange} />
-      </div>
 
       {/* Land Details */}
       <div className="mb-3">
-        <label className="form-label">Land Details</label>
+        <h6 className="form-label text-danger">Land Details</h6>
 
         <div className="row">
           <div className="col-md-6 mb-3">

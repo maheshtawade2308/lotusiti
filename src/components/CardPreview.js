@@ -15,26 +15,20 @@ function CardPreview({ formData, landRecords }) {
     aadhaar,
     dob,
     gender,
-    district,
-    taluka,
-    village,
-    accountNo,
-    surveyNo,
-    area,
   } = formData;
 
   return (
-    <div>
-      <div>
+    <div >
+      <div >
       <h5 className="text-center mb-3">Card Preview</h5>
       <FarmerIdCard formData={formData} landRecords={landRecords} />
       </div>
-       <div className="d-flex gap-3 mt-3 justify-content-center">
-        <button className="btn btn-success" onClick={downloadFrontSide}>
+       <div className="d-flex gap-3 mt-5 mb-3 justify-content-center">
+        <button className="btn btn-success btn-lg" onClick={downloadFrontSide}>
           Download Front Side
         </button>
 
-        <button className="btn btn-primary" onClick={downloadBackSide}>
+        <button className="btn btn-primary btn-lg" onClick={downloadBackSide}>
           Download Back Side
         </button>
       </div>

@@ -47,7 +47,7 @@ function App() {
             landRecords={landRecords}
             setLandRecords={setLandRecords} />
         </div>
-        <div className="col-md-5">
+        <div className="col-md-5 card-preview-scale">
           <CardPreview formData={formData} landRecords={landRecords} />
         </div>
       </div>
