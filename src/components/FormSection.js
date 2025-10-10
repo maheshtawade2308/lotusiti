@@ -152,13 +152,12 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
           </div>
         </div>
       </div>
-
-      {/* Add Land Record Button */}
-     <button type="button" className="btn btn-outline-success" onClick={handleAddLandRecord}>
-  + Add Land Record
-</button>
-
-
+      <div className="mb-3">
+        {/* Add Land Record Button */}
+        <button type="button" className="btn btn-outline-success" onClick={handleAddLandRecord}>
+          + Add Land Record
+        </button>
+      </div>
     </form>
   );
 }
