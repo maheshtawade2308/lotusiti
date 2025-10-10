@@ -38,7 +38,11 @@ function IdCardFront({ formData }) {
           <p><strong>जन्म दिनांक / DOB :</strong> {dob || "-----------"}</p>
           <p><strong>लिंग / Gender :</strong> {gender || "-----------"}</p>
           <p><strong>मोबाईल / Mobile :</strong> {mobile || "-----------"}</p>
-          <p><strong>आधार नं / Aadhaar No. :</strong> {aadhaar || "-----------"}</p>
+          <p style={{
+            margin: "2px 0",
+            whiteSpace: "nowrap",      // Prevent line breaks
+            
+          }}><strong>आधार नं / Aadhaar No. :</strong> {aadhaar || "-----------"}</p>
           <img src={leaves} alt="leaves" className="leaves" />
         </div>
         <div className="qr-section">

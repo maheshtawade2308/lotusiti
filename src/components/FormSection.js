@@ -66,43 +66,53 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
     }));
   };
 
+  const handleFormerIdChange = (e) => {
+    let input = e.target.value;
+
+    // Remove all non-digit characters
+    input = input.replace(/\D/g, "");
+
+    // Add space after every 3rd or 2nd group pattern (customize if needed)
+    // Example pattern: 3-2-2-2-2 like 564 56 45 65 46
+    const groups = [];
+    if (input.length > 0) groups.push(input.substring(0, 4)); // first 4 digits
+    if (input.length > 4) groups.push(input.substring(4, 8)); // next 4
+    if (input.length > 8) groups.push(input.substring(8, 11)); // next 2
+    const formatted = groups.join(" ");
+
+    setFormData((prev) => ({
+      ...prev,
+      id: formatted,
+    }));
+  }
+const setAddharNo = (e)=>{
+      let input = e.target.value;
+
+      // Remove all non-digit characters
+      input = input.replace(/\D/g, "");
+
+      // Format as groups of 4 digits
+      const formatted = input.match(/.{1,4}/g)?.join(" ") || "";
+
+      setFormData((prev) => ({
+        ...prev,
+        aadhaar: formatted,
+      }));
+    }
+  
   return (
     <form>
       <ToastContainer />
       {/* Farmer ID */}
       <div className="mb-3">
         <label className="form-label">Farmer ID</label>
-        <input
-          type="text"
-          name="id"
-          className="form-control"
-          value={formData.id}
-          onChange={(e) => {
-            let input = e.target.value;
-
-            // Remove all non-digit characters
-            input = input.replace(/\D/g, "");
-
-            // Add space after every 3rd or 2nd group pattern (customize if needed)
-            // Example pattern: 3-2-2-2-2 like 564 56 45 65 46
-            const groups = [];
-            if (input.length > 0) groups.push(input.substring(0, 4)); // first 4 digits
-            if (input.length > 4) groups.push(input.substring(4, 8)); // next 4
-            if (input.length > 8) groups.push(input.substring(8, 11)); // next 2
-            const formatted = groups.join(" ");
-
-            setFormData((prev) => ({
-              ...prev,
-              id: formatted,
-            }));
-          }}
-        />
+        <input type="text"name="id" className="form-control" value={formData.id} onChange={handleFormerIdChange} />
       </div>
       <div className="row">
         {/* Mobile & Aadhaar */}
         <div className="col-md-6 mb-3">
           <label className="form-label">Aadhaar Number</label>
-          <input type="text" name="aadhaar" className="form-control" value={formData.aadhaar} onChange={handleChange} />
+          <input type="text" name="aadhaar" className="form-control" value={formData.aadhaar} maxLength={14} onChange={setAddharNo} />
         </div>
         <div className="col-md-6 mb-3">
           <label className="form-label">Mobile Number</label>
