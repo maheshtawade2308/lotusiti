@@ -14,7 +14,7 @@ function IdCardFront({ formData }) {
       <div className="header green-bar">
         <div className="logo-title">
           <img src={logo} alt="Agri Record" className="logo" />
-          <span className="title">फार्मर आयडी कार्ड</span>
+          <span className="title">शेतकरी ओळख पत्र</span>
         </div>
         <img src={farmerIcon} alt="Farmer Icon" className="farmer-icon" />
       </div>
@@ -33,7 +33,7 @@ function IdCardFront({ formData }) {
           {photo ? <img src={photo} alt="Farmer" /> : <span>Photo</span>}
         </div>
         <div className="details">
-          <p style={{margin: "2px 0"}}><strong>नाव :</strong> {name_mr || "-----------"}</p>
+          <p style={{ margin: "2px 0" }}><strong>नाव :</strong> {name_mr || "-----------"}</p>
           <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> {name_en || "-----------"}</p>
           <p><strong>जन्म दिनांक / DOB :</strong> {dob || "-----------"}</p>
           <p><strong>लिंग / Gender :</strong> {gender || "-----------"}</p>
@@ -47,10 +47,20 @@ function IdCardFront({ formData }) {
       </div>
 
       <div className="bottom-bar">
-        <div className="id-text">
-          <strong style={{ color: "yellow" }}>फार्मर आयडी :</strong> {id || "-----------"}
+        <div className="id-text" style={{
+          display: "flex",
+          alignItems: "baseline", // Aligns text on the same line
+          justifyContent: "center",
+          gap: "10px",
+          fontSize: "20px",
+          fontWeight: "600",
+          color: "#fff"
+        }}>
+          <span style={{ color: "yellow" }}>फार्मर आयडी :</span>
+          <span>{id || "-----------"}</span>
         </div>
       </div>
+
     </div>
   );
 }
