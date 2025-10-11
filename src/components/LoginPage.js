@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { supabase } from '../db/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../components/auth/AuthContext"; 
+
 
 function LoginPage() {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -15,16 +18,12 @@ const handleLogin = async (e) => {
 //   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   const statemail = 'admin@lotusiti.com';
   const statpassword = 'admin@123';
-  
 
- console.log(email);
-    console.log(password);
   if (email === statemail && password === statpassword) {
-    console.log(statemail);
-    console.log(statpassword);
    
     setMessage('यशस्वी लॉगिन!');
     setLoading(false);
+login();
     navigate('/farmeridcard');
   } else {
     setMessage('चुकीचा ईमेल किंवा पासवर्ड');
@@ -64,6 +63,13 @@ const handleLogin = async (e) => {
           </div>
 
           <button type="submit" className="btn btn-primary w-100">Login / लॉगिन करा</button>
+          {loading && (
+            <div className="text-center mt-2">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            )}
 
           {message && (
             <div className="alert alert-info mt-3 text-center" role="alert">
