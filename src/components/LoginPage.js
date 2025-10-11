@@ -7,23 +7,31 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const { data, error } = await supabase
-    .from('FarmerId')
-    .select('*')
-    .eq('email', email)
-    .eq('password', password);
-    // const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setMessage(`त्रुटी: ${error.message}`);
-    } else {
-      setMessage('यशस्वी लॉगिन!');
-      navigate('/farmeridcard');
-      // Redirect or show dashboard
-    }
-  };
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+//   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const statemail = 'admin@lotusiti.com';
+  const statpassword = 'admin@123';
+  
+
+ console.log(email);
+    console.log(password);
+  if (email === statemail && password === statpassword) {
+    console.log(statemail);
+    console.log(statpassword);
+   
+    setMessage('यशस्वी लॉगिन!');
+    setLoading(false);
+    navigate('/farmeridcard');
+  } else {
+    setMessage('चुकीचा ईमेल किंवा पासवर्ड');
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
