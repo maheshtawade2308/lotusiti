@@ -8,6 +8,15 @@ import watermark from "../assets/watermark.png";
 
 function IdCardFront({ formData }) {
   const { name_mr, name_en, dob, gender, mobile, aadhaar, id, photo } = formData;
+  function formatDate(dateStr) {
+    if (!dateStr) return "-----------";
+    const date = new Date(dateStr);
+    if (isNaN(date)) return dateStr;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
 
   return (
     <div className="id-card front" id="card-front">
@@ -35,7 +44,7 @@ function IdCardFront({ formData }) {
         <div className="details">
           <p style={{ margin: "2px 0" }}><strong>नाव :</strong> {name_mr || "-----------"}</p>
           <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> {name_en || "-----------"}</p>
-          <p><strong>जन्म दिनांक / DOB :</strong> {dob || "-----------"}</p>
+          <p><strong>जन्म दिनांक / DOB :</strong> {formatDate(dob) || "-----------"}</p>
           <p><strong>लिंग / Gender :</strong> {gender || "-----------"}</p>
           <p><strong>मोबाईल / Mobile :</strong> {mobile || "-----------"}</p>
           <p style={{
@@ -56,9 +65,9 @@ function IdCardFront({ formData }) {
           alignItems: "baseline", // Aligns text on the same line
           justifyContent: "center",
           gap: "10px",
-          fontSize: "20px",
+          fontSize: "35px",
           fontWeight: "600",
-          color: "#fff"
+          color: "#fff",
         }}>
           <span style={{ color: "yellow" }}>फार्मर आयडी :</span>
           <span>{id || "-----------"}</span>
