@@ -44,14 +44,14 @@ function IdCardFront({ formData }) {
         <div className="details">
           <p style={{ margin: "2px 0" }}><strong>नाव :</strong> {name_mr || "-----------"}</p>
           <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> {name_en || "-----------"}</p>
-          <p><strong>जन्म दिनांक / DOB :</strong> {formatDate(dob) || "-----------"}</p>
+          <p><strong>जन्म दिनांक / DOB :</strong><br /><span style={{ fontWeight: "500" }}>{dob || "-----------"}</span></p>
           <p><strong>लिंग / Gender :</strong> {gender || "-----------"}</p>
           <p><strong>मोबाईल / Mobile :</strong> {mobile || "-----------"}</p>
-          <p style={{
-            margin: "2px 0",
-            whiteSpace: "nowrap",      // Prevent line breaks
-            
-          }}><strong>आधार नं / Aadhaar No. :</strong> {aadhaar || "-----------"}</p>
+         <p style={{ margin: "2px 0" }}>
+             <strong>आधार नं / Aadhaar No. :</strong>
+             <br />
+             <span style={{ fontWeight: "500" }}>{aadhaar || "-----------"}</span>
+         </p>
           <img src={leaves} alt="leaves" className="leaves" />
         </div>
         <div className="qr-section">
