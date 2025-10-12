@@ -1,46 +1,59 @@
-import { createContext, useState, useContext, useEffect  } from "react";
+import { createContext, useState, useContext, useEffect, useRef } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true" // restore session
+    localStorage.getItem("isLoggedIn") === "true"
   );
 
-  // Set session duration (in ms)
-  const SESSION_TIMEOUT = 10 * 60 * 1000; // ✅ 10 minutes
+  const logoutTimer = useRef(null);  // Use useRef so the timer persists across renders
 
-  let logoutTimer;
+  const SESSION_TIMEOUT = 20* 60 * 1000; //  10 minutes
 
-  const startSessionTimer = () => {
-    clearTimeout(logoutTimer);
-    logoutTimer = setTimeout(() => {
+  // Start or reset the session timer based on user activity
+  const resetTimer = () => {
+    if (logoutTimer.current) {
+      clearTimeout(logoutTimer.current);
+    }
+
+    logoutTimer.current = setTimeout(() => {
       logout();
-      alert("Your session has expired. Please log in again!");
+      alert("Your session expired due to inactivity.");
     }, SESSION_TIMEOUT);
   };
 
   const login = () => {
-    setIsAuthenticated(true);
     localStorage.setItem("isLoggedIn", "true");
     setIsLoggedIn(true);
+    resetTimer(); // Start session timer on login
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
-    clearTimeout(logoutTimer);
+    clearTimeout(logoutTimer.current);
     localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
   };
 
-  // Reset session on page reload
+  // Detect user activity and reset timer
   useEffect(() => {
-    if (isAuthenticated) {
-      startSessionTimer();
+    if (isLoggedIn) {
+      window.addEventListener("mousemove", resetTimer);
+      window.addEventListener("keydown", resetTimer);
+      window.addEventListener("click", resetTimer);
+      window.addEventListener("scroll", resetTimer);
+
+      resetTimer(); // Initial start on login
     }
-    return () => clearTimeout(logoutTimer);
-  }, [isAuthenticated]);
+
+    return () => {
+      window.removeEventListener("mousemove", resetTimer);
+      window.removeEventListener("keydown", resetTimer);
+      window.removeEventListener("click", resetTimer);
+      window.removeEventListener("scroll", resetTimer);
+      clearTimeout(logoutTimer.current);
+    };
+  }, [isLoggedIn]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
