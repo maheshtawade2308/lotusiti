@@ -4,18 +4,6 @@ import FarmerIdCard from './FarmerIdCard';
 import { downloadFrontSide, downloadBackSide } from '../utils/generateJPGBothSides';
 
 function CardPreview({ formData, landRecords }) {
-  const {
-    name_en,
-    name_mr,
-    id,
-    age,
-    address,
-    photo,
-    mobile,
-    aadhaar,
-    dob,
-    gender,
-  } = formData;
 
   return (
     <div >
