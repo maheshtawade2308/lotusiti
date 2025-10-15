@@ -49,7 +49,7 @@ import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
             setLandRecords={setLandRecords} />
         </div>
         <div className="col-md-5 card-preview-scale">
-          <CardPreview formData={formData} landRecords={landRecords} />
+          <CardPreview formData={formData} landRecords={landRecords} setFormData={setFormData} setLandRecords={setLandRecords} />
         </div>
       </div>
     </div>
