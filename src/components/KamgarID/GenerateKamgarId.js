@@ -3,7 +3,7 @@ import './kamgarId.css';
 import leftLogo from '../../assets/mbocw-logo-left1.png';
 import rightLogo from '../../assets/bocw_logo_right.png';
 import centerImage from '../../assets/farmer.png';
-import photo from '../../assets/farmer.png';
+import photo from '../../assets/images.webp';
 import qrCode from '../../assets/farmer.png';
 import watermark from '../../assets/kamgaridbg.png';
 
@@ -23,10 +23,7 @@ const GenerateKamgarId = () => {
   return (
     <div className="k-idcard-container" style={{
          backgroundImage: `url(${watermark})`,
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          position: "relative",
+          backgroundSize: "contain"
         }}>
       <div className="k-idcard-header">
         <img src={leftLogo} alt="Left Logo" className="k-logo left" />
