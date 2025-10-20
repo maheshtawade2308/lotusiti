@@ -2,29 +2,19 @@ import React from 'react';
 import './kamgarId.css';
 import leftLogo from '../../assets/mbocw-logo-left1.png';
 import rightLogo from '../../assets/bocw_logo_right.png';
-import centerImage from '../../assets/farmer.png';
 import photo from '../../assets/images.webp';
-import qrCode from '../../assets/farmer.png';
 import watermark from '../../assets/kamgaridbg.png';
+import QRCodeGenerator from "../../utils/QRCodeGeneratorKid";
 
-const GenerateKamgarId = () => {
-  const details = {
-    registrationNumber: "MH080570074182",
-    registrationDate: "16/06/2025",
-    name: "योगिता जगदीश बडघे",
-    gender: "स्त्री",
-    dob: "19/08/1991",
-    aadhaar: "9764457665",
-    workType: "मेसन काम",
-    residence: "मालेगाव",
-    district: "नाशिक",
-  };
+const GenerateKamgarId = ({ details }) => {
+  
 
   return (
+    <div className='container d-flex justify-content-center align-items-center'>
     <div className="k-idcard-container" style={{
          backgroundImage: `url(${watermark})`,
           backgroundSize: "contain"
-        }}>
+        }} id="card-front" >
       <div className="k-idcard-header">
         <img src={leftLogo} alt="Left Logo" className="k-logo left" />
         <div className="k-header-text">
@@ -46,7 +36,7 @@ const GenerateKamgarId = () => {
           <p><strong>नाव:</strong> {details.name}</p>
           <p><strong>लिंग:</strong> {details.gender}</p>
           <p><strong>जन्मतारीख:</strong> {details.dob}</p>
-          <p><strong>आधार क्रमांक:</strong> {details.aadhaar}</p>
+          <p><strong>भ्रमणध्वनी क्रमांक:</strong> {details.mobile}</p>
           <p><strong>कामाचा प्रकार:</strong> {details.workType}</p>
           <div className="k-row">
             <p><strong>राहिवास:</strong> {details.residence}</p>
@@ -54,12 +44,16 @@ const GenerateKamgarId = () => {
           </div>
 
         </div>
-
+        <div>
         <div className="k-photo-section">
           <img src={photo} alt="Photo" className="k-photo" />
-          <img src={qrCode} alt="QR Code" className="k-qr" />
+          <div className="k-qr">
+          <QRCodeGenerator mobile={details.mobile} regId={details.registrationNumber} />
+        </div>
+        </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

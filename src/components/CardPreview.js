@@ -16,7 +16,7 @@ function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
   };
 
    const handleReset = () => {
-    window.location.href= "/farmeridcard";
+    window.location.href= "/kamgarid";
   };
 
   return (

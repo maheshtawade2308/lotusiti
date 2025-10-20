@@ -1,6 +1,6 @@
 // components/IdCardFront.js
 import React from "react";
-import QRCodeGenerator from "./QRCodeGenerator";
+import QRCodeGenerator from "../utils/QRCodeGenerator";
 import logo from "../assets/logo.png";
 import farmerIcon from "../assets/farmer.png";
 import leaves from "../assets/leaves.png";
