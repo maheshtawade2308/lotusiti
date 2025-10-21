@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import FarmerIdCard from './FarmerIdCard';
-import { downloadFrontSide, downloadBackSide } from '../utils/generateJPGBothSides';
+import { downloadFrontSide, downloadBackSide } from '../components/utils/generateJPGBothSides';
 
 function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
    const [showFront, setShowFront] = useState(true); // Controls which button is shown

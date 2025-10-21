@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './kamgarId.css';
+import '../css/kamgarId.css';
 import GenerateKamgarId from './GenerateKamgarId';
-import { generateJPGBothSides } from '../../utils/generateJPGBothSides';
+import { generateJPGBothSides } from '../utils/generateJPGBothSides';
 
 
 const KamgarForm = () => {
@@ -48,7 +48,7 @@ const KamgarForm = () => {
       <div className="row">
           <form onSubmit={handleSubmit} className="row g-3">
                 {/* Form Section */}
-                <div className="col-md-6">
+                <div className="col-md-7">
                   <form className="row g-2">
                     <div className="col-md-6">
                       <label className="form-label">नोंदणी क्रमांक</label>
@@ -57,7 +57,7 @@ const KamgarForm = () => {
 
                     <div className="col-md-6">
                       <label className="form-label">नोंदणी दिनांक</label>
-                      <input type="text" className="form-control" name="registrationDate" value={formData.registrationDate} onChange={handleChange} required />
+                      <input type="date" className="form-control" name="registrationDate" value={formData.registrationDate} onChange={handleChange} required />
                     </div>
 
                     <div className="col-md-6">
@@ -72,7 +72,7 @@ const KamgarForm = () => {
 
                     <div className="col-md-6">
                       <label className="form-label">जन्मतारीख</label>
-                      <input type="text" className="form-control" name="dob" value={formData.dob} onChange={handleChange} required />
+                      <input type="date" className="form-control" name="dob" value={formData.dob} onChange={handleChange} required />
                     </div>
 
                     <div className="col-md-6">
@@ -86,7 +86,7 @@ const KamgarForm = () => {
                     </div>
 
                     <div className="col-md-6">
-                      <label className="form-label">राहिवास</label>
+                      <label className="form-label">रहिवास</label>
                       <input type="text" className="form-control" name="residence" value={formData.residence} onChange={handleChange} required />
                     </div>
 
@@ -103,7 +103,7 @@ const KamgarForm = () => {
                 </div>
 
                
-                <div className="col-md-6">
+                <div className="col-md-5">
                   <GenerateKamgarId details={formData} />
                 </div>
 
