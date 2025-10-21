@@ -3,7 +3,7 @@ import { supabase } from './db/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../components/auth/AuthContext";
 import { toast, ToastContainer } from 'react-toastify';
-import '../lib/LoginPage.css';
+import '../components/css/LoginPage.css';
 
 
 function LoginPage() {
