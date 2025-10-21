@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import FarmerIdCard from './FarmerIdCard';
-import { downloadFrontSide, downloadBackSide } from '../components/utils/generateJPGBothSides';
+import {generateJPGBothSides, downloadFrontSide, downloadBackSide } from '../components/utils/generateJPGBothSides';
 
 function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
    const [showFront, setShowFront] = useState(true); // Controls which button is shown
@@ -27,15 +27,10 @@ function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
       </div>
 
       <div className="d-flex gap-3 mt-5 mb-3 justify-content-center">
-       {showFront ? (
-          <button className="btn btn-success btn-lg" onClick={handleFrontDownload}>
-            Download Front Side
+    
+          <button className="btn btn-success btn-lg" onClick={generateJPGBothSides}>
+            Download
           </button>
-        ) : (
-          <button className="btn btn-primary btn-lg" onClick={handleBackDownload}>
-            Download Back Side
-          </button>
-        )}
 
         <button className="btn btn-danger btn-lg" onClick={handleReset}>
           Reset All
