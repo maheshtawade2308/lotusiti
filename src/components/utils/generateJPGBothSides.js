@@ -1,6 +1,7 @@
 import html2canvas from 'html2canvas';
 
-export const generateJPGBothSides = async () => {
+export const generateJPGBothSides = async (name) => {
+  console.log("hello",name);
   const frontElement = document.getElementById('card-front');
   const backElement = document.getElementById('card-back');
 
@@ -28,7 +29,11 @@ export const generateJPGBothSides = async () => {
   const imgData = combinedCanvas.toDataURL('image/jpeg', 1.0);
   const link = document.createElement('a');
   link.href = imgData;
-  link.download = 'farmer-id-card.jpg';
+  // Sanitize name for filename (remove spaces, special characters)
+  const safeName = name.trim().replace(/\s+/g, '_').replace(/[^\w\-]/g, '');
+  link.download = `${safeName}_FarmerId.jpg`;
+
+
   link.click();
 };
 

@@ -4,7 +4,7 @@ import {generateJPGBothSides, downloadFrontSide, downloadBackSide } from '../com
 
 function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
    const [showFront, setShowFront] = useState(true); // Controls which button is shown
-
+console.log("formdata",formData);
   const handleFrontDownload = () => {
     downloadFrontSide();
     setShowFront(false); // Show Back Side button
@@ -28,7 +28,7 @@ function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
 
       <div className="d-flex gap-3 mt-5 mb-3 justify-content-center">
     
-          <button className="btn btn-success btn-lg" onClick={generateJPGBothSides}>
+          <button className="btn btn-success btn-lg" onClick={() => generateJPGBothSides(formData.name_en)}>
             Download
           </button>
 
