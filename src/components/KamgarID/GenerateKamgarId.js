@@ -21,7 +21,8 @@ const GenerateKamgarId = ({ details }) => {
     <div className='container d-flex justify-content-center align-items-center'>
       <div className="k-idcard-container" style={{
         backgroundImage: `url(${watermark})`,
-        backgroundSize: "contain"
+        backgroundSize: "cover"
+        
       }} id="card-front" >
         <div className="k-idcard-header">
           <img src={leftLogo} alt="Left Logo" className="k-logo left" />
