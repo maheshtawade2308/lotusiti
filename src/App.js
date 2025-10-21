@@ -27,7 +27,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-         <Route path='/kamgarId' element={<><Navbar /><KamgarForm/></>}></Route>
+         <Route path='/kamgarId' element={<ProtectedRoute><Navbar /><KamgarForm/></ProtectedRoute>}></Route>
       </Routes>
     </BrowserRouter>
 
