@@ -13,7 +13,7 @@ const KamgarForm = () => {
     dob: '',
     mobile: '',
     workType: '',
-    residence: '',
+    regplace: '',
     district: '',
     photo: null,
   });
@@ -86,8 +86,8 @@ const KamgarForm = () => {
                     </div>
 
                     <div className="col-md-6">
-                      <label className="form-label">रहिवास</label>
-                      <input type="text" className="form-control" name="residence" value={formData.residence} onChange={handleChange} required />
+                      <label className="form-label">नोंदणीचे ठिकाण</label>
+                      <input type="text" className="form-control" name="residence" value={formData.regplace} onChange={handleChange} required />
                     </div>
 
                     <div className="col-md-6">

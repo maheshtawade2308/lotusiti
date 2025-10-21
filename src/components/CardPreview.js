@@ -1,19 +1,8 @@
 import React, { useState } from 'react';
 import FarmerIdCard from './FarmerIdCard';
-import {generateJPGBothSides, downloadFrontSide, downloadBackSide } from '../components/utils/generateJPGBothSides';
+import {generateJPGBothSides } from '../components/utils/generateJPGBothSides';
 
 function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
-   const [showFront, setShowFront] = useState(true); // Controls which button is shown
-console.log("formdata",formData);
-  const handleFrontDownload = () => {
-    downloadFrontSide();
-    setShowFront(false); // Show Back Side button
-  };
-
-  const handleBackDownload = () => {
-    downloadBackSide();
-    setShowFront(true); // Show Front Side button again
-  };
 
    const handleReset = () => {
     window.location.href= "/kamgarid";
