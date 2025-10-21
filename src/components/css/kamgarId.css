@@ -10,7 +10,6 @@
   height: 330px;
   position: relative;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  /* justify-content: space-between;  */
 }
 
 .k-idcard-header {
@@ -46,15 +45,14 @@
 }
 
 .k-idcard-body {
-  display: flex;
+    display: flex;
   justify-content: space-between;
-  flex-direction: row;
+  align-items: flex-start;
   margin-top: 10px;
-  align-items: flex-start ;
-  margin-left: 10px;
-  margin-right: 5px;
-  
+  padding-left: 10px;
+  padding-right: 5px;
 }
+
 
 .k-details-section {
  display: flex;
@@ -74,19 +72,20 @@
   gap: 10px;
 }
 
-.k-photo-section {
-  display: flex;
-  flex-direction: column;
-}
-
-.k-photo {
+.k-photo-box {
   width: 90px;
   height: 90px;
-  object-fit: cover;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
-  background-color: white;
-  opacity: 0.8;
+  margin-bottom: 5px;
+  justify-content: center;
+  /* background-color: white; */
+
 }
 
+.k-photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}

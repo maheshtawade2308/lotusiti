@@ -7,6 +7,7 @@ import FarmerCardGenerator from './components/FarmerCardGenerator';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import GenerateKamgarId from './components/KamgarID/GenerateKamgarId';
 import KamgarForm from './components/KamgarID/KamgarForm';
+import Navbar from './components/pages/Navbar';
 
 
 function App() {
@@ -21,11 +22,12 @@ function App() {
           path="/farmeridcard"
           element={
             <ProtectedRoute>
+              <Navbar />
               <FarmerCardGenerator />
             </ProtectedRoute>
           }
         />
-         <Route path='/kamgarId' element={<KamgarForm/>}></Route>
+         <Route path='/kamgarId' element={<><Navbar /><KamgarForm/></>}></Route>
       </Routes>
     </BrowserRouter>
 
