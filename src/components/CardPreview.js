@@ -16,24 +16,7 @@ function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
   };
 
    const handleReset = () => {
-    // Reset form fields to default (empty values)
-    setFormData({
-      id: '',
-      aadhaar: '',
-      mobile: '',
-      name_en: '',
-      name_mr: '',
-      dob: '',
-      gender: '',
-      address: '',
-      photo: '',
-    });
-
-    // Clear land records
-    setLandRecords([]);
-    
-    // Optionally reset toggle to show front side button
-    setShowFront(true);
+    window.location.href= "/kamgarid";
   };
 
   return (

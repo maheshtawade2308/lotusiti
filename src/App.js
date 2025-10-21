@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import FarmerCardGenerator from './components/FarmerCardGenerator';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import GenerateKamgarId from './components/KamgarID/GenerateKamgarId';
+import KamgarForm from './components/KamgarID/KamgarForm';
 
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+         <Route path='/kamgarId' element={<KamgarForm/>}></Route>
       </Routes>
     </BrowserRouter>
 
