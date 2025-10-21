@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas';
 
 export const generateJPGBothSides = async (name) => {
-  console.log("hello",name);
+  
   const frontElement = document.getElementById('card-front');
   const backElement = document.getElementById('card-back');
 
@@ -37,7 +37,7 @@ export const generateJPGBothSides = async (name) => {
   link.click();
 };
 
-export const downloadFrontSide = async () => {
+export const downloadFrontSide = async (name) => {
   const element = document.getElementById('card-front');
   if (!element) return;
 
@@ -46,7 +46,8 @@ export const downloadFrontSide = async () => {
 
   const link = document.createElement('a');
   link.href = imgData;
-  link.download = 'card-front.jpg';
+   const safeName = name
+  link.download = `${safeName}_Id.jpg`;
   link.click();
 };
 

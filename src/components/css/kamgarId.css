@@ -62,7 +62,7 @@
   
 }
 .k-details-section p {
-  margin: 6.5px 0px;         /*Reduces vertical spacing between lines*/
+  margin: 5.5px 0px;         /*Reduces vertical spacing between lines*/
   line-height: 1;   
 /* font-family: "Teko", sans-serif; */
 
@@ -74,8 +74,8 @@
 }
 
 .k-photo-box {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   margin-bottom: 5px;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../css/kamgarId.css';
 import GenerateKamgarId from './GenerateKamgarId';
-import { generateJPGBothSides } from '../utils/generateJPGBothSides';
+import { downloadFrontSide } from '../utils/generateJPGBothSides';
 
 
 const KamgarForm = () => {
@@ -38,9 +38,6 @@ const KamgarForm = () => {
     window.location.href = "/kamgarid";
   };
 
-  const handleFrontDownload = () => {
-    generateJPGBothSides();
-  };
 
 
   return (
@@ -67,7 +64,11 @@ const KamgarForm = () => {
 
                     <div className="col-md-6">
                       <label className="form-label">लिंग</label>
-                      <input type="text" className="form-control" name="gender" value={formData.gender} onChange={handleChange} required />
+                      <select name="gender" className="form-select" value={formData.gender} onChange={handleChange} required>
+                        <option ></option>
+                        <option value="Male">पुरुष </option>
+                        <option value="Female">स्त्री</option>
+                      </select>
                     </div>
 
                     <div className="col-md-6">
@@ -87,7 +88,7 @@ const KamgarForm = () => {
 
                     <div className="col-md-6">
                       <label className="form-label">नोंदणीचे ठिकाण</label>
-                      <input type="text" className="form-control" name="residence" value={formData.regplace} onChange={handleChange} required />
+                      <input type="text" className="form-control" name="regplace" value={formData.regplace} onChange={handleChange} required />
                     </div>
 
                     <div className="col-md-6">
@@ -108,7 +109,7 @@ const KamgarForm = () => {
                 </div>
 
             <div className="d-flex gap-3 mt-5 mb-3 justify-content-center">
-              <button className="btn btn-primary btn-lg" onClick={handleFrontDownload}>
+              <button className="btn btn-primary btn-lg" onClick={()=>downloadFrontSide(formData.name)}>
                 Download
               </button>
               <button className="btn btn-danger btn-lg" onClick={handleReset}>
