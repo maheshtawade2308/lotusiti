@@ -1,5 +1,5 @@
 import React from "react";
-import "../lib/FarmerIdCard.css";
+import "../components/css/FarmerIdCard.css";
 import IdCardFront from "../components/IdCardFront";
 import IdCardBack from "../components/IdCardBack";
 

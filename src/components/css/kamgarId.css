@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap');
+
+.k-idcard-container {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 500px;
+  height: 330px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.k-idcard-header {
+ display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.k-logo {
+  padding-left: 5px;
+   height: 65px;
+}
+
+.k-header-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 13px;
+  color: rgb(166, 16, 16);
+  font-weight: 600;
+  /* line-height: 1.2; */
+}
+
+
+.k-idcard-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  padding: 2px;
+  
+}
+
+.k-idcard-body {
+    display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 10px;
+  padding-left: 10px;
+  padding-right: 5px;
+}
+
+
+.k-details-section {
+ display: flex;
+ flex-direction: column;
+  font-size: 14.5px;
+  
+}
+.k-details-section p {
+  margin: 6.5px 0px;         /*Reduces vertical spacing between lines*/
+  line-height: 1;   
+/* font-family: "Teko", sans-serif; */
+
+}
+
+.k-row {
+  display: flex;
+  gap: 10px;
+}
+
+.k-photo-box {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  justify-content: center;
+  /* background-color: white; */
+
+}
+
+.k-photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}

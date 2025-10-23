@@ -274,7 +274,7 @@ font-family: "Teko", sans-serif;
   }
 
   .photo-section {
-    background-image: url('../assets/watermark.png') !important;
+    background-image: url('../../assets/watermark.png') !important;
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-position: center !important;

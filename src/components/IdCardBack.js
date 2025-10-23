@@ -32,8 +32,8 @@ function IdCardBack({ formData, landRecords = [] }) {
                   <td>{record.district || "-"}</td>
                   <td>{record.taluka || "-"}</td>
                   <td>{record.village || "-"}</td>
-                  <td>{record.accountNo || "-"}</td>
                   <td>{record.surveyNo || "-"}</td>
+                  <td>{record.accountNo || "-"}</td>
                   <td>{record.area || "-"}</td>
                 </tr>
               ))}

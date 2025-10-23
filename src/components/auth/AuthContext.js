@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const logoutTimer = useRef(null);  // Use useRef so the timer persists across renders
 
-  const SESSION_TIMEOUT = 20* 60 * 1000; //  10 minutes
+  const SESSION_TIMEOUT = 20* 60 * 1000; //  20 minutes
 
   // Start or reset the session timer based on user activity
   const resetTimer = () => {

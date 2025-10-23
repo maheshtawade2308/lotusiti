@@ -4,7 +4,10 @@ import FormSection from '../components/FormSection';
 import CardPreview from '../components/CardPreview';
 import { ToastContainer, toast } from 'react-toastify';  // Import ToastContainer and toast
 import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
+import { useNavigate } from 'react-router-dom';
+import Navbar from './pages/Navbar';
  function FarmerCardGenerator(){
+  const navigate = useNavigate();
  const [formData, setFormData] = useState({
     id: '',
     aadhaar: '',
@@ -39,9 +42,6 @@ import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
     <div className="container mt-4">
       <ToastContainer />
       <div className="row">
-        <h2 className="text-danger">Generate Farmer ID Card</h2>
-      </div>
-      <div className="row">
         <div className="col-md-7">
           <FormSection formData={formData}
             setFormData={setFormData}
@@ -49,7 +49,7 @@ import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
             setLandRecords={setLandRecords} />
         </div>
         <div className="col-md-5 card-preview-scale">
-          <CardPreview formData={formData} landRecords={landRecords} />
+          <CardPreview formData={formData} landRecords={landRecords} setFormData={setFormData} setLandRecords={setLandRecords} />
         </div>
       </div>
     </div>
