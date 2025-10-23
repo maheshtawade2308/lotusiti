@@ -22,7 +22,7 @@ const GenerateKamgarId = ({ details }) => {
       <div className="k-idcard-container" style={{
         backgroundImage: `url(${watermark})`,
         backgroundSize: "contain"
-      }} id="card-front" >
+      }} id="Kamgar-card-front" >
         <div className="k-idcard-header">
           <img src={leftLogo} alt="Left Logo" className="k-logo left" />
           <div className="k-header-text">
