@@ -2,6 +2,7 @@ import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
+import { supabase } from "../components/SupabaseClient";
 
 function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
 
@@ -35,17 +36,57 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
         ...prev,
         [name]: files ? URL.createObjectURL(files[0]) : value,
       }));
+
+    }  if (name === "name_en") {
+      setFormData((prev) => ({
+        ...prev,
+        name_en: value,
+      }));
+
+      try {
+        const response = await axios.get(
+          `https://inputtools.google.com/request?text=${value}&itc=mr-t-i0-und&num=1`
+        );
+
+        if (
+          response.data &&
+          response.data[0] === "SUCCESS" &&
+          response.data[1]?.[0]?.[1]?.[0]
+        ) {
+          const marathiText = response.data[1][0][1][0];
+
+          setFormData((prev) => ({
+            ...prev,
+            name_mr: marathiText,
+          }));
+        }
+      } catch (err) {
+        console.error("Transliteration Error:", err);
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: files ? URL.createObjectURL(files[0]) : value,
+      }));
+
     }
   };
 
-  const handleAddLandRecord = () => {
+
+   const handleAddLandRecord = () => {
+    // Allow only one land record
+    if (landRecords.length >= 1) {
+      toast.error("Only one land record is allowed per Farmer ID!");
+      return;
+    }
+
     const landData = {
-      district: formData.district,
-      taluka: formData.taluka,
-      village: formData.village,
-      accountNo: formData.accountNo,
-      surveyNo: formData.surveyNo,
-      area: formData.area,
+      district: formData.district?.trim(),
+      taluka: formData.taluka?.trim(),
+      village: formData.village?.trim(),
+      accountNo: formData.accountNo?.trim(),
+      surveyNo: formData.surveyNo?.trim(),
+      area: formData.area?.trim(),
     };
 
     // Ensure no empty fields
@@ -61,13 +102,63 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
     // Clear form fields
     setFormData((prev) => ({
       ...prev,
-      district: '',
-      taluka: '',
-      village: '',
-      accountNo: '',
-      surveyNo: '',
-      area: '',
+      district: "",
+      taluka: "",
+      village: "",
+      accountNo: "",
+      surveyNo: "",
+      area: "",
     }));
+  };
+
+  // const handleAddLandRecord = () => {
+  //   const landData = {
+  //     district: formData.district,
+  //     taluka: formData.taluka,
+  //     village: formData.village,
+  //     accountNo: formData.accountNo,
+  //     surveyNo: formData.surveyNo,
+  //     area: formData.area,
+  //   };
+  //   toast.success("Record added successfully");
+
+  //   setLandRecords((prev) => [...prev, landData]);
+
+  //   // Clear land fields
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     district: "",
+  //     taluka: "",
+  //     village: "",
+  //     accountNo: "",
+  //     surveyNo: "",
+  //     area: "",
+  //   }));
+  // };
+  const handleSaveToSupabase = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("farmers") // your Supabase table name
+      .insert([
+        {
+          farmer_id: formData.id,
+          name_en: formData.name_en,
+          name_mr: formData.name_mr,
+          dob: formData.dob,
+          gender: formData.gender,
+          aadhaar: formData.aadhaar,
+          mobile: formData.mobile,
+          address: formData.address,
+          land_records: landRecords,
+        },
+      ]);
+
+    if (error) throw error;
+    toast.success("✅ Farmer data saved to Supabase!");
+  } catch (err) {
+    console.error(err.message);
+    toast.error("❌ Failed to save data.");
+  }
   };
 
   const handleDeleteRecord = (index) => {
