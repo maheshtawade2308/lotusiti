@@ -7,13 +7,14 @@ import leaves from "../assets/leaves.png";
 import watermark from "../assets/watermark.png";
 
 function IdCardFront({ formData }) {
-  const { name_mr, name_en, dob, gender, mobile, aadhaar, id, photo } = formData;
+  const { name_mr, name_en, dob, gender, mobile, aadhaar, id, photo } =
+    formData;
   function formatDate(dateStr) {
     if (!dateStr) return "-----------";
     const date = new Date(dateStr);
     if (isNaN(date)) return dateStr;
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   }
@@ -42,16 +43,31 @@ function IdCardFront({ formData }) {
           {photo ? <img src={photo} alt="Farmer" /> : <span>Photo</span>}
         </div>
         <div className="details">
-          <p style={{ margin: "2px 0" }}><strong>नाव :</strong> {name_mr || "-----------"}</p>
-          <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong> {name_en || "-----------"}</p>
-          <p><strong>जन्म दिनांक / DOB :</strong> {formatDate(dob) || "-----------"}</p>
-          <p><strong>लिंग / Gender :</strong> {gender || "-----------"}</p>
-          <p><strong>मोबाईल / Mobile :</strong> {mobile || "-----------"}</p>
-          <p style={{
-            margin: "2px 0",
-            whiteSpace: "nowrap",      // Prevent line breaks
-            
-          }}><strong>आधार नं / Aadhaar No. :</strong> {aadhaar || "-----------"}</p>
+          <p style={{ margin: "2px 0" }}>
+            <strong>नाव :</strong> {name_mr || "-----------"}
+          </p>
+          <p>
+            <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>{" "}
+            {name_en || "-----------"}
+          </p>
+          <p>
+            <strong>जन्म दिनांक / DOB :</strong>{" "}
+            {formatDate(dob) || "-----------"}
+          </p>
+          <p>
+            <strong>लिंग / Gender :</strong> {gender || "-----------"}
+          </p>
+          <p>
+            <strong>मोबाईल / Mobile :</strong> {mobile || "-----------"}
+          </p>
+          <p
+            style={{
+              margin: "2px 0",
+              whiteSpace: "nowrap", // Prevent line breaks
+            }}
+          >
+            <strong>आधार नं / Aadhaar No. :</strong> {aadhaar || "-----------"}
+          </p>
           <img src={leaves} alt="leaves" className="leaves" />
         </div>
         <div className="qr-section">
@@ -60,20 +76,22 @@ function IdCardFront({ formData }) {
       </div>
 
       <div className="bottom-bar">
-        <div className="id-text" style={{
-          display: "flex",
-          alignItems: "baseline", // Aligns text on the same line
-          justifyContent: "center",
-          gap: "10px",
-          fontSize: "35px",
-          fontWeight: "600",
-          color: "#fff",
-        }}>
+        <div
+          className="id-text"
+          style={{
+            display: "flex",
+            alignItems: "baseline", // Aligns text on the same line
+            justifyContent: "center",
+            gap: "10px",
+            fontSize: "35px",
+            fontWeight: "600",
+            color: "#fff",
+          }}
+        >
           <span style={{ color: "yellow" }}>फार्मर आयडी :</span>
           <span>{id || "-----------"}</span>
         </div>
       </div>
-
     </div>
   );
 }
