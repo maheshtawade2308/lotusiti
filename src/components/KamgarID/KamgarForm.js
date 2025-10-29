@@ -66,8 +66,8 @@ const KamgarForm = () => {
                       <label className="form-label">लिंग</label>
                       <select name="gender" className="form-select" value={formData.gender} onChange={handleChange} required>
                         <option ></option>
-                        <option value="Male">पुरुष </option>
-                        <option value="Female">स्त्री</option>
+                        <option value="पुरुष">पुरुष </option>
+                        <option value="स्त्री">स्त्री</option>
                       </select>
                     </div>
 
