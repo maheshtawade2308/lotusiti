@@ -1,22 +1,43 @@
 import html2canvas from 'html2canvas';
-export const generateJPGBothSides = async () => {
-  const sides = ['card-front', 'card-back'];
 
-  for (const side of sides) {
-    const element = document.getElementById(side);
-    if (!element) continue;
+export const generateJPGBothSides = async (name) => {
+  
+  const frontElement = document.getElementById('card-front');
+  const backElement = document.getElementById('card-back');
 
-    const canvas = await html2canvas(element, { scale: 3, useCORS: true });
-    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+  if (!frontElement || !backElement) return;
 
-    const link = document.createElement('a');
-    link.href = imgData;
-    link.download = `${side}.jpg`;
-    link.click();
-  }
+  // Capture both sides
+  const frontCanvas = await html2canvas(frontElement, { scale: 3, useCORS: true });
+  const backCanvas = await html2canvas(backElement, { scale: 3, useCORS: true });
+
+  // Determine combined dimensions
+  const width = Math.max(frontCanvas.width, backCanvas.width);
+  const height = frontCanvas.height + backCanvas.height;
+
+  // Create a new canvas to combine both
+  const combinedCanvas = document.createElement('canvas');
+  combinedCanvas.width = width;
+  combinedCanvas.height = height;
+  const ctx = combinedCanvas.getContext('2d');
+
+  // Draw both canvases onto the combined canvas
+  ctx.drawImage(frontCanvas, 0, 0);
+  ctx.drawImage(backCanvas, 0, frontCanvas.height);
+
+  // Export as JPG
+  const imgData = combinedCanvas.toDataURL('image/jpeg', 1.0);
+  const link = document.createElement('a');
+  link.href = imgData;
+  // Sanitize name for filename (remove spaces, special characters)
+  const safeName = name.trim().replace(/\s+/g, '_').replace(/[^\w\-]/g, '');
+  link.download = `${safeName}_FarmerId.jpg`;
+
+
+  link.click();
 };
 
-export const downloadFrontSide = async () => {
+export const downloadFrontSide = async (name) => {
   const element = document.getElementById('card-front');
   if (!element) return;
 
@@ -25,7 +46,8 @@ export const downloadFrontSide = async () => {
 
   const link = document.createElement('a');
   link.href = imgData;
-  link.download = 'card-front.jpg';
+   const safeName = name
+  link.download = `${safeName}_Id.jpg`;
   link.click();
 };
 

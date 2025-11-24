@@ -19,7 +19,7 @@ function LoginPage() {
     setLoading(true);
     //   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     const statemail = 'admin@lotusiti.com';
-    const statpassword = 'admin@123';
+    const statpassword = 'Lotus@2504';
 
     if (email === statemail && password === statpassword) {
       toast.success('यशस्वी लॉगिन!');

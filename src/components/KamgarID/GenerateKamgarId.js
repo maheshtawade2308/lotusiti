@@ -14,14 +14,15 @@ const GenerateKamgarId = ({ details }) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    return `${day}/${month}/${year}`;
   }
 
   return (
     <div className='container d-flex justify-content-center align-items-center'>
       <div className="k-idcard-container" style={{
         backgroundImage: `url(${watermark})`,
-        backgroundSize: "contain"
+        backgroundSize: "cover"
+        
       }} id="card-front" >
         <div className="k-idcard-header">
           <img src={leftLogo} alt="Left Logo" className="k-logo left" />
@@ -47,7 +48,7 @@ const GenerateKamgarId = ({ details }) => {
             <p><strong>भ्रमणध्वनी क्रमांक:</strong> {details.mobile || "-----------"}</p>
             <p><strong>कामाचा प्रकार:</strong> {details.workType || "-----------"}</p>
             <div className="k-row">
-              <p><strong>राहिवास:</strong> {details.residence || "-----------"}</p>
+              <p><strong>नोंदणीचे ठिकाण:</strong> {details.regplace || "-----------"}</p>
               <p><strong>जिल्हा:</strong> {details.district|| "-----------"}</p>
             </div>
 
