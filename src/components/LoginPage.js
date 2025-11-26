@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from './db/supabaseClient';
+import { supabase } from './supabase/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../components/auth/AuthContext";
 import { toast, ToastContainer } from 'react-toastify';
@@ -12,24 +12,32 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    //   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    const statemail = 'admin@lotusiti.com';
-    const statpassword = 'Lotus@2504';
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    console.log(data);
+    // const { data, error } = await supabase
+    // .from("Users")
+    // .select("*", { count: "exact", head: false })  
+    // .eq("email", email)
+    // .eq("password", password)
+    // .maybeSingle();
+    
+      if (error) {
+        console.error("Supabase error:", error);
+        toast.error("This email is not regestered with us!!! Please contact Admin");
+        return;
+      }
 
-    if (email === statemail && password === statpassword) {
-      toast.success('यशस्वी लॉगिन!');
-      setLoading(false);
-      login();
-      navigate('/farmeridcard');
-    } else {
-     toast.error('चुकीचा ईमेल किंवा पासवर्ड');
-      setLoading(false);
-    }
+      if (!data) {
+        toast.error("चुकीचा ईमेल किंवा पासवर्ड");
+        return;
+      }else{
+        toast.success('यशस्वी लॉगिन!');
+        login();
+        navigate('/farmeridcard');
+      }
   };
 
 
@@ -64,7 +72,7 @@ function LoginPage() {
           </div>
 
           <button type="submit" className="btn btn-success w-100">
-            {loading ? 'लोड होत आहे...' : 'Login / लॉगिन करा'}
+           Login / लॉगिन करा
           </button>
           <ToastContainer position="top-center" autoClose={3000} />
 
