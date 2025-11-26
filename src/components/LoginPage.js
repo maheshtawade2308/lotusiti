@@ -16,6 +16,7 @@ function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    
     console.log(data);
     // const { data, error } = await supabase
     // .from("Users")
@@ -36,6 +37,15 @@ function LoginPage() {
       }else{
         toast.success('यशस्वी लॉगिन!');
         login();
+
+        const { data } = await supabase.auth.getUser();
+        const user = data.user;
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
         navigate('/farmeridcard');
       }
   };
