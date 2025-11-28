@@ -10,13 +10,14 @@ import KamgarForm from './components/KamgarID/KamgarForm';
 import Navbar from './components/pages/Navbar';
 import RegisterUser from './components/supabase/RegisterUser';
 import UserList from './components/supabase/UserList';
+import Footer from './components/pages/Footer';
 
 
 function App() {
 
 
   return (
-     <BrowserRouter>
+     <BrowserRouter >
       <Routes>
         <Route path="/" element={<LoginPage />} />
         {/* <Route path="/signup" element={<SignupPage />} /> */}
@@ -40,6 +41,7 @@ function App() {
           }
         />
       </Routes>
+      <Footer/>
     </BrowserRouter>
 
   );

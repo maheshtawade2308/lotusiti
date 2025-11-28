@@ -12,3 +12,7 @@ code {
     monospace;
 }
 
+footer {
+  letter-spacing: 0.5px;
+  font-size: 14px;
+}

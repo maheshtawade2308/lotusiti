@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     // Register User
     // ------------------------------------------------
     const signup = async (formdata) => {
-      const { email, password, name, mobile, address, gender } = formdata;
+      const { email, password, name, mobile, city, gender } = formdata;
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
         name,
         email,
         mobile,
-        address,
+        city,
         gender,
         role: "user",
         created_at: new Date(),
