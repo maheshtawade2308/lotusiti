@@ -8,6 +8,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import GenerateKamgarId from './components/KamgarID/GenerateKamgarId';
 import KamgarForm from './components/KamgarID/KamgarForm';
 import Navbar from './components/pages/Navbar';
+import RegisterUser from './components/supabase/RegisterUser';
+import UserList from './components/supabase/UserList';
 
 
 function App() {
@@ -28,6 +30,15 @@ function App() {
           }
         />
          <Route path='/kamgarId' element={<ProtectedRoute><Navbar /><KamgarForm/></ProtectedRoute>}></Route>
+         <Route path='/register' element = {<ProtectedRoute><Navbar /><RegisterUser/></ProtectedRoute> }/>
+        <Route
+          path="/user-list"
+          element={
+            <ProtectedRoute>
+              <UserList />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
 

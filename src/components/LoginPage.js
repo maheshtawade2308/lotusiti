@@ -17,7 +17,7 @@ function LoginPage() {
     e.preventDefault();
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     
-    console.log(data);
+
     // const { data, error } = await supabase
     // .from("Users")
     // .select("*", { count: "exact", head: false })  

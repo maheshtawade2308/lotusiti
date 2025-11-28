@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
-import { supabase } from './supabaseClient';
+import { supabase } from "./supabase/supabaseClient";
+import { useNavigate } from 'react-router-dom';
 
 
 function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signUp({ email, password });
+    const {data, error } = await supabase.auth.signUp({ email, password });
     if (error) {
       setMessage(`त्रुटी: ${error.message}`);
     } else {
       setMessage('नोंदणी यशस्वी झाली! कृपया आपला ईमेल तपासा.');
+      async function name(params) {
+        navigate("/supalogin");
+      }
     }
+
   };
 
   return (

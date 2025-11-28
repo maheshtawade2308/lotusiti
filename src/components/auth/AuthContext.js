@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect, useRef } from "react";
+import { supabase } from "../supabase/supabaseClient";
 
 const AuthContext = createContext();
 
@@ -22,6 +23,51 @@ export const AuthProvider = ({ children }) => {
       alert("Your session expired due to inactivity.");
     }, SESSION_TIMEOUT);
   };
+
+  // ------------------------------------------------
+    // Register User
+    // ------------------------------------------------
+    const signup = async (formdata) => {
+      const { email, password, name, mobile, address, gender } = formdata;
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: undefined
+        },
+      });
+  
+       if (error) throw error;
+  
+      const userId = data.user.id;
+  
+      // Insert full profile
+      await supabase.from("profiles").insert({
+        id: userId,
+        name,
+        email,
+        mobile,
+        address,
+        gender,
+        role: "user",
+        created_at: new Date(),
+        
+      });
+  
+      return data;
+    };
+
+  // ------------------------------
+  // Load all users
+  // --------------------
+  
+     async function fetchUsers() {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .order("created_at", { ascending: false });
+    
+      }
 
   const login = () => {
     localStorage.setItem("isLoggedIn", "true");
@@ -56,7 +102,7 @@ export const AuthProvider = ({ children }) => {
   }, [isLoggedIn]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn,signup, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
