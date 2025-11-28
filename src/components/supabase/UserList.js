@@ -28,6 +28,7 @@ export default function UserList() {
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
+      .eq("role", "user")
       .order("created_at", { ascending: false });
 
     if (!error) setUsers(data);
