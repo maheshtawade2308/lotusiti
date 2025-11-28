@@ -104,7 +104,7 @@ export default function UserList() {
                   <th>Mobile</th>
                   <th>Gender</th>
                   <th>Address</th>
-                  <th>Registered</th>
+                  <th>Registered on</th>
                   <th>Actions</th>
                 </tr>
               </thead>

@@ -13,42 +13,29 @@ function LoginPage() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+ const handleLogin = async (e) => {
+  e.preventDefault();
+
+  try {
+    const data = await login({ email, password });
+
+    // SUCCESS
+    toast.success("यशस्वी लॉगिन!");
+    navigate("/farmeridcard");
+  } 
+  catch (err) {
+    console.error("Supabase error:", err.message);
     
+    // ❌ Password wrong
+    if (err.message.includes("Invalid login credentials")) {
+      toast.error("चुकीचा ईमेल किंवा पासवर्ड");
+      return;
+    }
 
-    // const { data, error } = await supabase
-    // .from("Users")
-    // .select("*", { count: "exact", head: false })  
-    // .eq("email", email)
-    // .eq("password", password)
-    // .maybeSingle();
-    
-      if (error) {
-        console.error("Supabase error:", error);
-        toast.error("This email is not regestered with us!!! Please contact Admin");
-        return;
-      }
-
-      if (!data) {
-        toast.error("चुकीचा ईमेल किंवा पासवर्ड");
-        return;
-      }else{
-        toast.success('यशस्वी लॉगिन!');
-        login();
-
-        const { data } = await supabase.auth.getUser();
-        const user = data.user;
-
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", user.id)
-          .single();
-        navigate('/farmeridcard');
-      }
-  };
+    // ❌ Any other unexpected error
+    toast.error("Login failed. Please try again.");
+  }
+};
 
 
   return (

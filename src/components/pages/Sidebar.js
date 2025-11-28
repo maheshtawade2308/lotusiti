@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// import { useAuth } from "../auth/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 import "../css/Sidebar.css";  // style file
 
 const Sidebar = ({ isOpen, onClose }) => {
-//   const { profile } = useAuth();
+const { profile } = useAuth();
 
   return (
     <>
@@ -16,7 +16,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className="sidebar-header">
           <div className="profile-icon">👤</div>
           <div className="profile-text">
-            Hello, <strong>{"User"}</strong> {/*profile?.name || "User"*/}
+            Hello, <strong>{profile?.name || "User"}</strong> 
           </div>
         </div>
 
@@ -37,8 +37,8 @@ const Sidebar = ({ isOpen, onClose }) => {
         </div>
 
         {/* ⭐ Admin-only section */}
-        {/* profile?.role === "admin" && */}
-        { (
+        
+        { profile?.role === "admin" &&(
           <div className="sidebar-section">
             <h6 className="section-title">Admin</h6>
 

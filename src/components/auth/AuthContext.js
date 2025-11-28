@@ -4,6 +4,8 @@ import { supabase } from "../supabase/supabaseClient";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const [profile, setProfile] = useState(null);
+  const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isLoggedIn") === "true"
   );
@@ -23,6 +25,24 @@ export const AuthProvider = ({ children }) => {
       alert("Your session expired due to inactivity.");
     }, SESSION_TIMEOUT);
   };
+
+   // ------------------------------
+  // Load profile for the user
+  // ------------------------------
+  async function fetchProfile(userId) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    if (!error && data) setProfile(data);
+  }
+
+  useEffect(() => {
+    if (user) fetchProfile(user.id);
+  }, [user]);
+
 
   // ------------------------------------------------
     // Register User
@@ -68,12 +88,23 @@ export const AuthProvider = ({ children }) => {
           .order("created_at", { ascending: false });
     
       }
-
-  const login = () => {
+  // ------------------------------
+  // LOGIN
+  // ------------------------------
+  const login = async ({ email, password }) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+     if (error) throw error;
     localStorage.setItem("isLoggedIn", "true");
     setIsLoggedIn(true);
     resetTimer(); // Start session timer on login
+    setUser(data.user);
+    return data;
+    
   };
+
 
   const logout = () => {
     clearTimeout(logoutTimer.current);
@@ -102,7 +133,7 @@ export const AuthProvider = ({ children }) => {
   }, [isLoggedIn]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn,signup, login, logout }}>
+    <AuthContext.Provider value={{user, profile, isLoggedIn,signup, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
