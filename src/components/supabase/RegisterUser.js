@@ -3,9 +3,9 @@ import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterUser() {
-  const { signup } = useAuth();
+  const { signup, profile } = useAuth();
   const navigate = useNavigate();
-
+ 
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -19,9 +19,9 @@ export default function RegisterUser() {
   const [msg, setMsg] = useState("");
 
   // If non-admin tries to open this page
-  // if (profile?.role !== "admin") {
-  //   return <h3 className="text-center mt-5 text-danger">❌ Access Denied</h3>;
-  // }
+  if (profile?.role !== "admin") {
+    return <h3 className="text-center mt-5 text-danger">❌ Access Denied</h3>;
+  }
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

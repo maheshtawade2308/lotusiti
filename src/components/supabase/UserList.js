@@ -2,16 +2,22 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 import Navbar from "../pages/Navbar";
 
+// Excel export
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
+// PDF export
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 export default function UserList() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Pagination
   const [page, setPage] = useState(1);
   const pageSize = 5;
 
-  // Edit form
   const [editUser, setEditUser] = useState(null);
 
   useEffect(() => {
@@ -24,25 +30,17 @@ export default function UserList() {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (error) console.error(error);
-    else setUsers(data);
-
+    if (!error) setUsers(data);
     setLoading(false);
   }
 
-  // ----- DELETE USER -----
   const deleteUser = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    if (!window.confirm("Delete this user?")) return;
 
-    // delete from profiles table
     await supabase.from("profiles").delete().eq("id", id);
-
-    // (optional) delete auth user - only via supabase admin API (server required)
-
     setUsers(users.filter((u) => u.id !== id));
   };
 
-  // ----- UPDATE USER -----
   const updateUser = async () => {
     const { id, name, mobile, address, gender } = editUser;
 
@@ -55,7 +53,6 @@ export default function UserList() {
     fetchUsers();
   };
 
-  // ----- FILTERED USERS -----
   const filteredUsers = users.filter(
     (u) =>
       u.name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -63,12 +60,57 @@ export default function UserList() {
       u.mobile?.includes(search)
   );
 
-  // ----- PAGINATION LOGIC -----
   const start = (page - 1) * pageSize;
-  const end = start + pageSize;
-  const paginatedUsers = filteredUsers.slice(start, end);
-
+  const paginatedUsers = filteredUsers.slice(start, start + pageSize);
   const totalPages = Math.ceil(filteredUsers.length / pageSize);
+
+  // ---------------- EXPORT TO EXCEL -------------------
+  const exportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(users);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const file = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(file, "registered_users.xlsx");
+  };
+
+  // ---------------- EXPORT TO PDF ---------------------
+  const exportPDF = () => {
+    const doc = new jsPDF();
+
+    doc.text("Registered Users", 14, 15);
+
+    autoTable(doc, {
+      startY: 20,
+      head: [["Name", "Email", "Mobile", "Gender", "Address"]],
+      body: users.map((u) => [
+        u.name,
+        u.email,
+        u.mobile,
+        u.gender,
+        u.address,
+      ]),
+    });
+
+    doc.save("registered_users.pdf");
+  };
+
+  // ---------------- WHATSAPP MESSAGE ------------------
+  const sendWhatsApp = (mobile) => {
+    const message = encodeURIComponent(
+      "Hello! This message is from Lotus Computer Institute."
+    );
+
+    window.open(`https://wa.me/91${mobile}?text=${message}`, "_blank");
+  };
 
   return (
     <>
@@ -76,24 +118,34 @@ export default function UserList() {
 
       <div className="container mt-4">
 
-        <h2 className="mb-3">👥 Registered Users</h2>
+        <div className="d-flex justify-content-between align-items-center">
+          <h2>👥 Registered Users</h2>
 
-        {/* Search Bar */}
+          {/* Export buttons */}
+          <div>
+            <button className="btn btn-success me-2" onClick={exportExcel}>
+              📗 Export Excel
+            </button>
+            <button className="btn btn-danger" onClick={exportPDF}>
+              📕 Export PDF
+            </button>
+          </div>
+        </div>
+
+        {/* Search */}
         <input
           type="text"
-          className="form-control mb-3"
-          placeholder="Search by name, email or mobile..."
+          className="form-control mt-3 mb-3"
+          placeholder="Search by name, email, mobile..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
-            setPage(1); // reset pagination after search
+            setPage(1);
           }}
         />
 
         {loading ? (
           <p>Loading...</p>
-        ) : filteredUsers.length === 0 ? (
-          <p>No users found.</p>
         ) : (
           <>
             <table className="table table-bordered table-striped">
@@ -104,7 +156,7 @@ export default function UserList() {
                   <th>Mobile</th>
                   <th>Gender</th>
                   <th>Address</th>
-                  <th>Registered on</th>
+                  <th>Registered</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -113,7 +165,7 @@ export default function UserList() {
                 {paginatedUsers.map((u) => (
                   <tr key={u.id}>
                     <td>{u.name}</td>
-                    <td>{u.email || "—"}</td>
+                    <td>{u.email}</td>
                     <td>{u.mobile}</td>
                     <td>{u.gender}</td>
                     <td>{u.address}</td>
@@ -125,6 +177,13 @@ export default function UserList() {
                         onClick={() => setEditUser(u)}
                       >
                         ✏ Edit
+                      </button>
+
+                      <button
+                        className="btn btn-sm btn-success me-2"
+                        onClick={() => sendWhatsApp(u.mobile)}
+                      >
+                        📩 WhatsApp
                       </button>
 
                       <button
@@ -140,17 +199,17 @@ export default function UserList() {
             </table>
 
             {/* Pagination */}
-            <div className="d-flex justify-content-between mt-3">
+            <div className="d-flex justify-content-between">
               <button
                 className="btn btn-secondary"
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
               >
-                ⬅ Prev
+                ⬅ Previous
               </button>
 
               <span className="fw-bold">
-                Page {page} / {totalPages}
+                Page {page} of {totalPages}
               </span>
 
               <button
@@ -163,70 +222,62 @@ export default function UserList() {
             </div>
           </>
         )}
-      </div>
 
-      {/* -------- EDIT MODAL -------- */}
-      {editUser && (
-        <div className="modal show d-block" tabIndex="-1">
-          <div className="modal-dialog">
-            <div className="modal-content">
+        {/* EDIT MODAL */}
+        {editUser && (
+          <div className="modal show d-block">
+            <div className="modal-dialog">
+              <div className="modal-content">
 
-              <div className="modal-header">
-                <h5 className="modal-title">Edit User</h5>
-                <button className="btn-close" onClick={() => setEditUser(null)}></button>
+                <div className="modal-header">
+                  <h5>Edit User</h5>
+                  <button
+                    className="btn-close"
+                    onClick={() => setEditUser(null)}
+                  ></button>
+                </div>
+
+                <div className="modal-body">
+                  <input
+                    className="form-control mb-2"
+                    value={editUser.name}
+                    onChange={(e) =>
+                      setEditUser({ ...editUser, name: e.target.value })
+                    }
+                  />
+                  <input
+                    className="form-control mb-2"
+                    value={editUser.mobile}
+                    onChange={(e) =>
+                      setEditUser({ ...editUser, mobile: e.target.value })
+                    }
+                  />
+                  <textarea
+                    className="form-control mb-2"
+                    value={editUser.address}
+                    onChange={(e) =>
+                      setEditUser({ ...editUser, address: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => setEditUser(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button className="btn btn-primary" onClick={updateUser}>
+                    Save
+                  </button>
+                </div>
+
               </div>
-
-              <div className="modal-body">
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  placeholder="Name"
-                  value={editUser.name}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, name: e.target.value })
-                  }
-                />
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  placeholder="Mobile"
-                  value={editUser.mobile}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, mobile: e.target.value })
-                  }
-                />
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  placeholder="Gender"
-                  value={editUser.gender}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, gender: e.target.value })
-                  }
-                />
-                <textarea
-                  className="form-control"
-                  placeholder="Address"
-                  value={editUser.address}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, address: e.target.value })
-                  }
-                ></textarea>
-              </div>
-
-              <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setEditUser(null)}>
-                  Cancel
-                </button>
-                <button className="btn btn-primary" onClick={updateUser}>
-                  Save Changes
-                </button>
-              </div>
-
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }
