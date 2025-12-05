@@ -20,10 +20,14 @@ export default function UserList() {
 
   const [editUser, setEditUser] = useState(null);
 
+  
+
   useEffect(() => {
     fetchUsers();
   }, []);
 
+   // If non-admin tries to open this page
+  
   async function fetchUsers() {
     const { data, error } = await supabase
       .from("profiles")
@@ -43,11 +47,11 @@ export default function UserList() {
   };
 
   const updateUser = async () => {
-    const { id, name, mobile, address, gender } = editUser;
+    const { id, name, mobile, city, gender } = editUser;
 
     await supabase
       .from("profiles")
-      .update({ name, mobile, address, gender })
+      .update({ name, mobile, city, gender })
       .eq("id", id);
 
     setEditUser(null);
@@ -91,13 +95,13 @@ export default function UserList() {
 
     autoTable(doc, {
       startY: 20,
-      head: [["Name", "Email", "Mobile", "Gender", "Address"]],
+      head: [["Name", "Email", "Mobile", "Gender", "City"]],
       body: users.map((u) => [
         u.name,
         u.email,
         u.mobile,
         u.gender,
-        u.address,
+        u.city,
       ]),
     });
 
@@ -156,7 +160,7 @@ export default function UserList() {
                   <th>Email</th>
                   <th>Mobile</th>
                   <th>Gender</th>
-                  <th>Address</th>
+                  <th>City</th>
                   <th>Registered</th>
                   <th>Actions</th>
                 </tr>
@@ -169,7 +173,7 @@ export default function UserList() {
                     <td>{u.email}</td>
                     <td>{u.mobile}</td>
                     <td>{u.gender}</td>
-                    <td>{u.address}</td>
+                    <td>{u.city}</td>
                     <td>{new Date(u.created_at).toLocaleString()}</td>
 
                     <td>
@@ -255,9 +259,9 @@ export default function UserList() {
                   />
                   <textarea
                     className="form-control mb-2"
-                    value={editUser.address}
+                    value={editUser.city}
                     onChange={(e) =>
-                      setEditUser({ ...editUser, address: e.target.value })
+                      setEditUser({ ...editUser, city: e.target.value })
                     }
                   />
                 </div>
