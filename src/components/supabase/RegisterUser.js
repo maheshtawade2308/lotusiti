@@ -10,7 +10,7 @@ export default function RegisterUser() {
     name: "",
     email: "",
     mobile: "",
-    city: "",
+    address: "",
     gender: "",
     password: ""
   });
@@ -39,7 +39,7 @@ export default function RegisterUser() {
         name: "",
         email: "",
         mobile: "",
-        city: "",
+        address: "",
         gender: "",
         password: ""
       });
@@ -105,8 +105,8 @@ export default function RegisterUser() {
         <div className="mb-3">
           <label className="form-label fw-bold">City</label>
           <textarea
-            name="city"
-            value={form.city}
+            name="address"
+            value={form.address}
             onChange={handleChange}
             className="form-control"
             rows="2"

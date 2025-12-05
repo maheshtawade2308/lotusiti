@@ -47,11 +47,11 @@ export default function UserList() {
   };
 
   const updateUser = async () => {
-    const { id, name, mobile, city, gender } = editUser;
+    const { id, name, mobile, address, gender } = editUser;
 
     await supabase
       .from("profiles")
-      .update({ name, mobile, city, gender })
+      .update({ name, mobile, address, gender })
       .eq("id", id);
 
     setEditUser(null);
@@ -95,13 +95,13 @@ export default function UserList() {
 
     autoTable(doc, {
       startY: 20,
-      head: [["Name", "Email", "Mobile", "Gender", "City"]],
+      head: [["Name", "Email", "Mobile", "Gender", "address"]],
       body: users.map((u) => [
         u.name,
         u.email,
         u.mobile,
         u.gender,
-        u.city,
+        u.address,
       ]),
     });
 
@@ -173,7 +173,7 @@ export default function UserList() {
                     <td>{u.email}</td>
                     <td>{u.mobile}</td>
                     <td>{u.gender}</td>
-                    <td>{u.city}</td>
+                    <td>{u.address}</td>
                     <td>{new Date(u.created_at).toLocaleString()}</td>
 
                     <td>
@@ -259,9 +259,9 @@ export default function UserList() {
                   />
                   <textarea
                     className="form-control mb-2"
-                    value={editUser.city}
+                    value={editUser.address}
                     onChange={(e) =>
-                      setEditUser({ ...editUser, city: e.target.value })
+                      setEditUser({ ...editUser, address: e.target.value })
                     }
                   />
                 </div>
