@@ -20,7 +20,7 @@ export default function RegisterUser() {
 
   // If non-admin tries to open this page
   if (profile?.role !== "admin") {
-    return <h3 className="text-center mt-5 text-danger">❌ Access Denied</h3>;
+    return;
   }
 
   const handleChange = (e) => {

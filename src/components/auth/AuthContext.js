@@ -1,29 +1,61 @@
-import { createContext, useState, useContext, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../supabase/supabaseClient";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [profile, setProfile] = useState(null);
   const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const logoutTimer = useRef(null);  // Use useRef so the timer persists across renders
+  // Listen to auth changes
+  useEffect(() => {
+    // Initial session
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+      setLoading(false);
+    });
 
-  const SESSION_TIMEOUT = 20* 60 * 1000; //  20 minutes
+    // Auth Listener
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
 
-  // Start or reset the session timer based on user activity
-  const resetTimer = () => {
-    if (logoutTimer.current) {
-      clearTimeout(logoutTimer.current);
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+  
+  // Load profile
+  useEffect(() => {
+    if (!user) {
+      setProfile(null);
+      return;
     }
 
-    logoutTimer.current = setTimeout(() => {
-      logout();
-      alert("Your session expired due to inactivity.");
-    }, SESSION_TIMEOUT);
+    supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => setProfile(data));
+  }, [user]);
+
+   // LOGIN
+  const login = async ({ email, password }) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+    return data;
+  };
+
+  const logout = async() => {
+    await supabase.auth.signOut();
   };
 
    // ------------------------------
@@ -48,92 +80,47 @@ export const AuthProvider = ({ children }) => {
     // Register User
     // ------------------------------------------------
     const signup = async (formdata) => {
-      const { email, password, name, mobile, address, gender } = formdata;
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: undefined
-        },
-      });
-  
-       if (error) throw error;
-  
-      const userId = data.user.id;
-  
-      // Insert full profile
-      await supabase.from("profiles").insert({
-        id: userId,
-        name,
-        email,
-        mobile,
-        address,
-        gender,
-        role: "user",
-        created_at: new Date(),
-        
-      });
-  
-      return data;
-    };
+  const adminSession = (await supabase.auth.getSession()).data.session;
 
-  // ------------------------------
-  // Load all users
-  // --------------------
-  
-     async function fetchUsers() {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .order("created_at", { ascending: false });
-    
-      }
-  // ------------------------------
-  // LOGIN
-  // ------------------------------
-  const login = async ({ email, password }) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-     if (error) throw error;
-    localStorage.setItem("isLoggedIn", "true");
-    setIsLoggedIn(true);
-    resetTimer(); // Start session timer on login
-    setUser(data.user);
-    return data;
-    
-  };
+  const { email, password, name, mobile, address, gender } = formdata;
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: undefined,
+    },
+  });
+
+  if (error) throw error;
+
+  const userId = data.user.id;
+
+  await supabase.from("profiles").insert({
+    id: userId,
+    name,
+    email,
+    mobile,
+    address,
+    gender,
+    role: "user",
+    created_at: new Date(),
+  });
+
+  // 🔥 Restore admin session
+  if (adminSession) {
+    await supabase.auth.setSession(adminSession);
+  }
+
+  return data;
+};
 
 
-  const logout = () => {
-    clearTimeout(logoutTimer.current);
-    localStorage.removeItem("isLoggedIn");
-    setIsLoggedIn(false);
-  };
 
-  // Detect user activity and reset timer
-  useEffect(() => {
-    if (isLoggedIn) {
-      window.addEventListener("mousemove", resetTimer);
-      window.addEventListener("keydown", resetTimer);
-      window.addEventListener("click", resetTimer);
-      window.addEventListener("scroll", resetTimer);
-
-      resetTimer(); // Initial start on login
-    }
-
-    return () => {
-      window.removeEventListener("mousemove", resetTimer);
-      window.removeEventListener("keydown", resetTimer);
-      window.removeEventListener("click", resetTimer);
-      window.removeEventListener("scroll", resetTimer);
-      clearTimeout(logoutTimer.current);
-    };
-  }, [isLoggedIn]);
-
-  return (
-    <AuthContext.Provider value={{user, profile, isLoggedIn,signup, login, logout }}>
+   return (
+    <AuthContext.Provider
+      value={{ user, profile, loading, login, logout, signup }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -119,8 +119,6 @@ export default function UserList() {
 
   return (
     <>
-      <Navbar />
-
       <div className="container mt-4">
 
         <div className="d-flex justify-content-between align-items-center">

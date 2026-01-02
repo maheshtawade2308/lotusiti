@@ -11,40 +11,60 @@ import Navbar from './components/pages/Navbar';
 import RegisterUser from './components/supabase/RegisterUser';
 import UserList from './components/supabase/UserList';
 import Footer from './components/pages/Footer';
+import { AuthProvider } from './components/auth/AuthContext';
 
 
 
 function App() {
-
-
   return (
-     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        {/* <Route path="/signup" element={<SignupPage />} /> */}
-        <Route
-          path="/farmeridcard"
-          element={
-            <ProtectedRoute>
-              <Navbar />
-              <FarmerCardGenerator />
-            </ProtectedRoute>
-          }
-        />
-         <Route path='/kamgarId' element={<ProtectedRoute><Navbar /><KamgarForm/></ProtectedRoute>}></Route>
-         <Route path='/register' element = {<ProtectedRoute><Navbar /><RegisterUser/></ProtectedRoute> }/>
-        <Route
-          path="/user-list"
-          element={
-            <ProtectedRoute>
-              <UserList />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-      <Footer/>
-    </BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
 
+          <Route
+            path="/farmeridcard"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <FarmerCardGenerator />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/kamgarId"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <KamgarForm />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <RegisterUser />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user-list"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <UserList />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        <Footer />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
