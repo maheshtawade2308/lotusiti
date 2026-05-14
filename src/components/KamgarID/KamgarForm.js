@@ -49,15 +49,15 @@ const KamgarForm = () => {
     }
 
     if (profile?.role === 'user') {
-      if (profile.balance_points < 25) {
+      if (profile.balance_points < 10) {
         toast.error("Insufficient Balance Points! You need 10 points to download.");
         return;
       }
 
-      const deducted = await deductPoints(25);
+      const deducted = await deductPoints(10);
       if (deducted) {
         await downloadFrontSide(formData.name);
-        toast.success("Downloaded successfully! 25 points deducted.");
+        toast.success("Downloaded successfully! 10 points deducted.");
       } else {
         toast.error("Failed to deduct points. Please try again.");
       }
