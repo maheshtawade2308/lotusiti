@@ -9,7 +9,10 @@ const Dashboard = () => {
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Dashboard</h2>
+        <div>
+          <h2>Dashboard</h2>
+          <h5 className="text-muted">Welcome, {profile?.name || "User"}!</h5>
+        </div>
         {profile?.role === "user" && (
           <div className="alert alert-warning mb-0 fw-bold shadow-sm py-2 px-4 rounded-pill">
             ⭐ Balance Points: {profile?.balance_points || 0}

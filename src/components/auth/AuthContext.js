@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
     const signup = async (formdata) => {
   const adminSession = (await supabase.auth.getSession()).data.session;
 
-  const { email, password, name, mobile, address, gender } = formdata;
+  const { email, password, name, mobile, address, gender, balance_points, center_name } = formdata;
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -104,7 +104,8 @@ export const AuthProvider = ({ children }) => {
     address,
     gender,
     role: "user",
-    balance_points: 0,
+    balance_points: parseInt(balance_points) || 0,
+    center_name: center_name || "Lotus Computer Institute",
     created_at: new Date(),
   });
 

@@ -46,11 +46,11 @@ export default function UserList() {
   };
 
   const updateUser = async () => {
-    const { id, name, mobile, address, gender, balance_points } = editUser;
+    const { id, name, mobile, address, gender, balance_points, center_name } = editUser;
 
     await supabase
       .from("profiles")
-      .update({ name, mobile, address, gender, balance_points })
+      .update({ name, mobile, address, gender, balance_points, center_name })
       .eq("id", id);
 
     setEditUser(null);
@@ -94,13 +94,12 @@ export default function UserList() {
 
     autoTable(doc, {
       startY: 20,
-      head: [["Name", "Email", "Mobile", "Gender", "Address", "Balance"]],
+      head: [["Name", "Email", "Mobile", "Center", "Balance"]],
       body: users.map((u) => [
         u.name,
         u.email,
         u.mobile,
-        u.gender,
-        u.address,
+        u.center_name || "-",
         u.balance_points || 0,
       ]),
     });
@@ -157,8 +156,7 @@ export default function UserList() {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Mobile</th>
-                  <th>Gender</th>
-                  <th>City</th>
+                  <th>Center Name</th>
                   <th>Balance</th>
                   <th>Registered</th>
                   <th>Actions</th>
@@ -171,8 +169,7 @@ export default function UserList() {
                     <td>{u.name}</td>
                     <td>{u.email}</td>
                     <td>{u.mobile}</td>
-                    <td>{u.gender}</td>
-                    <td>{u.address}</td>
+                    <td>{u.center_name || "-"}</td>
                     <td>{u.balance_points || 0}</td>
                     <td>{new Date(u.created_at).toLocaleString()}</td>
 
@@ -264,6 +261,17 @@ export default function UserList() {
                       setEditUser({ ...editUser, address: e.target.value })
                     }
                   />
+                  <div className="input-group mb-2">
+                    <span className="input-group-text">Center Name</span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={editUser.center_name || ""}
+                      onChange={(e) =>
+                        setEditUser({ ...editUser, center_name: e.target.value })
+                      }
+                    />
+                  </div>
                   <div className="input-group mb-2">
                     <span className="input-group-text">Balance Points</span>
                     <input

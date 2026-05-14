@@ -12,7 +12,9 @@ export default function RegisterUser() {
     mobile: "",
     address: "",
     gender: "",
-    password: ""
+    password: "",
+    balance_points: "",
+    center_name: ""
   });
 
   const [loading, setLoading] = useState(false);
@@ -41,7 +43,9 @@ export default function RegisterUser() {
         mobile: "",
         address: "",
         gender: "",
-        password: ""
+        password: "",
+        balance_points: "",
+        center_name: ""
       });
 
       setTimeout(() => navigate("/user-list"), 1500);
@@ -139,6 +143,30 @@ export default function RegisterUser() {
             className="form-control"
             required
             minLength={6}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">Initial Balance Points</label>
+          <input
+            type="number"
+            name="balance_points"
+            value={form.balance_points}
+            onChange={handleChange}
+            className="form-control"
+            min="0"
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-bold">Center Name</label>
+          <input
+            type="text"
+            name="center_name"
+            value={form.center_name}
+            onChange={handleChange}
+            className="form-control"
+            placeholder="e.g. Lotus Computer Institute"
           />
         </div>
 

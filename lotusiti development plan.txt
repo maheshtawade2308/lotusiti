@@ -8,3 +8,9 @@ Each registered user will have balance points. add authority to add and remove b
 when a user downloads a kamgar id or farmer id, 10 points should be deducted for each download.
 admin user can download unlimited id's without any balance points.
 for normal user balance points should be visible in dashboard
+ if a normal user is logged in. His center name should appear at place of lotus computer institute
+ 
+ home button should be before the dashboard header. add one more field in add uses page name with ' center name'. This center name should be dynamic. if a normal user is logged in. His center name should appear at place of lotus computer institute. The user logged user should able to see his name in the dashboard
+ 
+ 
+ in kamgar id page add a button to download back side. when the button is clicked back side.png should be downloaded

@@ -2,12 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useAuth } from "../auth/AuthContext";
-import Sidebar from "./Sidebar"
-import { useState } from "react";
 
 const Navbar = () => {
   const { logout, profile } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
   const handleLogout = () => {
@@ -17,24 +14,22 @@ const Navbar = () => {
 
   return (
     <>
-    {/* ===== SIDEBAR ===== */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       {/* ===== NAVBAR ===== */}
     <nav
       className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-4 py-3"
     >
-       {/* Sidebar Toggle Button (Left side) */}
-          <button
-            className="btn btn-outline-light me-3 "
-             type="button"
-            onClick={() => setSidebarOpen(true)}
-          >
-          <span className="navbar-toggler-icon"></span>
-          </button>
-      <div className="container-fluid">
-        {/* Brand Logo / Title */}
+      <div className="container-fluid d-flex align-items-center">
+        {/* Home Button (Shifted Left) */}
+        <Link
+          to="/dashboard"
+          className="btn btn-outline-light fw-semibold px-4 py-2 rounded-pill nav-btn me-3"
+        >
+          🏠 Home
+        </Link>
+
+        {/* Brand Logo / Dynamic Title */}
         <Link className="navbar-brand fw-bold text-white fs-4" to="/dashboard">
-          🧑‍💻 Lotus Computer Institute
+          🧑‍💻 {profile?.role === 'user' ? (profile?.center_name || 'Lotus Computer Institute') : 'Lotus Computer Institute'}
         </Link>
 
         <button
@@ -50,22 +45,15 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Right side links */}
+        {/* Left side links */}
         <div
-          className="collapse navbar-collapse justify-content-end"
+          className="collapse navbar-collapse"
           id="navbarMenu"
         >
-          <ul className="navbar-nav align-items-center gap-3">
+          <ul className="navbar-nav me-auto align-items-center gap-3">
+          </ul>
 
-            {/* Home Button */}
-            <li className="nav-item">
-              <Link
-                to="/dashboard"
-                className="btn btn-outline-light fw-semibold px-4 py-2 rounded-pill nav-btn"
-              >
-                🏠 Home
-              </Link>
-            </li>
+          <ul className="navbar-nav ms-auto align-items-center gap-3">
 
             {/* Balance Points (For normal users) */}
             {profile?.role === "user" && (
