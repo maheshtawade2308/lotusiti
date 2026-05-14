@@ -47,11 +47,11 @@ export default function UserList() {
   };
 
   const updateUser = async () => {
-    const { id, name, mobile, address, gender } = editUser;
+    const { id, name, mobile, address, gender, balance_points } = editUser;
 
     await supabase
       .from("profiles")
-      .update({ name, mobile, address, gender })
+      .update({ name, mobile, address, gender, balance_points })
       .eq("id", id);
 
     setEditUser(null);
@@ -95,13 +95,14 @@ export default function UserList() {
 
     autoTable(doc, {
       startY: 20,
-      head: [["Name", "Email", "Mobile", "Gender", "address"]],
+      head: [["Name", "Email", "Mobile", "Gender", "Address", "Balance"]],
       body: users.map((u) => [
         u.name,
         u.email,
         u.mobile,
         u.gender,
         u.address,
+        u.balance_points || 0,
       ]),
     });
 
@@ -159,6 +160,7 @@ export default function UserList() {
                   <th>Mobile</th>
                   <th>Gender</th>
                   <th>City</th>
+                  <th>Balance</th>
                   <th>Registered</th>
                   <th>Actions</th>
                 </tr>
@@ -172,6 +174,7 @@ export default function UserList() {
                     <td>{u.mobile}</td>
                     <td>{u.gender}</td>
                     <td>{u.address}</td>
+                    <td>{u.balance_points || 0}</td>
                     <td>{new Date(u.created_at).toLocaleString()}</td>
 
                     <td>
@@ -262,6 +265,17 @@ export default function UserList() {
                       setEditUser({ ...editUser, address: e.target.value })
                     }
                   />
+                  <div className="input-group mb-2">
+                    <span className="input-group-text">Balance Points</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={editUser.balance_points || 0}
+                      onChange={(e) =>
+                        setEditUser({ ...editUser, balance_points: parseInt(e.target.value) || 0 })
+                      }
+                    />
+                  </div>
                 </div>
 
                 <div className="modal-footer">

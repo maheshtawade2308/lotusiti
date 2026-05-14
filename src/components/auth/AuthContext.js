@@ -104,6 +104,7 @@ export const AuthProvider = ({ children }) => {
     address,
     gender,
     role: "user",
+    balance_points: 0,
     created_at: new Date(),
   });
 
@@ -117,9 +118,60 @@ export const AuthProvider = ({ children }) => {
 
 
 
+  // ------------------------------------------------
+  // Balance Points Handlers
+  // ------------------------------------------------
+  const deductPoints = async (pointsToDeduct) => {
+    if (!profile || profile.role === 'admin') return true;
+    
+    if (profile.balance_points < pointsToDeduct) {
+      return false; // Not enough points
+    }
+
+    const newBalance = profile.balance_points - pointsToDeduct;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ balance_points: newBalance })
+      .eq("id", profile.id);
+
+    if (error) {
+      console.error("Error deducting points:", error);
+      return false;
+    }
+
+    setProfile({ ...profile, balance_points: newBalance });
+    return true;
+  };
+
+  const updateBalancePoints = async (userId, pointsToAdd) => {
+    // Only fetch current points and add, for admin use
+    const { data: userProfile, error: fetchError } = await supabase
+      .from("profiles")
+      .select("balance_points")
+      .eq("id", userId)
+      .single();
+
+    if (fetchError) {
+      console.error("Error fetching user profile:", fetchError);
+      return false;
+    }
+
+    const newBalance = (userProfile.balance_points || 0) + pointsToAdd;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ balance_points: newBalance })
+      .eq("id", userId);
+
+    if (error) {
+      console.error("Error updating points:", error);
+      return false;
+    }
+    return true;
+  };
+
    return (
     <AuthContext.Provider
-      value={{ user, profile, loading, login, logout, signup }}
+      value={{ user, profile, loading, login, logout, signup, deductPoints, updateBalancePoints, setProfile }}
     >
       {children}
     </AuthContext.Provider>

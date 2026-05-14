@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, profile } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
@@ -34,7 +34,7 @@ const Navbar = () => {
           </button>
       <div className="container-fluid">
         {/* Brand Logo / Title */}
-        <Link className="navbar-brand fw-bold text-white fs-4" to="/farmeridcard">
+        <Link className="navbar-brand fw-bold text-white fs-4" to="/dashboard">
           🧑‍💻 Lotus Computer Institute
         </Link>
 
@@ -61,32 +61,21 @@ const Navbar = () => {
             {/* Home Button */}
             <li className="nav-item">
               <Link
-                to="/farmeridcard"
+                to="/dashboard"
                 className="btn btn-outline-light fw-semibold px-4 py-2 rounded-pill nav-btn"
               >
                 🏠 Home
               </Link>
             </li>
 
-            {/* Farmer ID Button */}
-            <li className="nav-item">
-              <Link
-                to="/farmeridcard"
-                className="btn btn-outline-light fw-semibold px-4 py-2 rounded-pill nav-btn"
-              >
-                👨‍🌾 Farmer ID
-              </Link>
-            </li>
-
-            {/* Kamgar ID Button */}
-            <li className="nav-item">
-              <Link
-                to="/kamgarId"
-                className="btn btn-outline-light fw-semibold px-4 py-2 rounded-pill nav-btn"
-              >
-                👷‍♂️ Kamgar ID
-              </Link>
-            </li>
+            {/* Balance Points (For normal users) */}
+            {profile?.role === "user" && (
+              <li className="nav-item">
+                <span className="btn btn-warning fw-bold px-4 py-2 rounded-pill shadow-sm" style={{ cursor: "default" }}>
+                  ⭐ Balance: {profile.balance_points || 0}
+                </span>
+              </li>
+            )}
 
             {/* Logout Button */}
             <li className="nav-item">

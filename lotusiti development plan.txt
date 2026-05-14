@@ -1,0 +1,10 @@
+when user logged in, a dashboard should be displayed.
+Farmer id and kamgar id button of Navbar should be displayed in the dashboard as cards.
+when user clicks on the card, it navigates to respective page.
+Dashboard contains user list which will be visible only to admin user. admin dashboard should also have cards to add user view users list.
+
+
+Each registered user will have balance points. add authority to add and remove balance point should be given to admin user.
+when a user downloads a kamgar id or farmer id, 10 points should be deducted for each download.
+admin user can download unlimited id's without any balance points.
+for normal user balance points should be visible in dashboard

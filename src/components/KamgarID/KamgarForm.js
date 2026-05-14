@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import '../css/kamgarId.css';
 import GenerateKamgarId from './GenerateKamgarId';
 import { downloadFrontSide } from '../utils/generateJPGBothSides';
+import { useAuth } from '../auth/AuthContext';
+import { toast } from 'react-toastify';
 
 
 const KamgarForm = () => {
@@ -19,6 +21,7 @@ const KamgarForm = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const { profile, deductPoints } = useAuth();
 
   const handleChange = (e) => {
    const { name, value, files } = e.target;
@@ -36,6 +39,30 @@ const KamgarForm = () => {
 
   const handleReset = () => {
     window.location.href = "/kamgarid";
+  };
+
+  const handleDownloadClick = async (e) => {
+    e.preventDefault();
+
+    if (profile?.role === 'admin') {
+      await downloadFrontSide(formData.name);
+      return;
+    }
+
+    if (profile?.role === 'user') {
+      if (profile.balance_points < 10) {
+        toast.error("Insufficient Balance Points! You need 10 points to download.");
+        return;
+      }
+      
+      const deducted = await deductPoints(10);
+      if (deducted) {
+        await downloadFrontSide(formData.name);
+        toast.success("Downloaded successfully! 10 points deducted.");
+      } else {
+        toast.error("Failed to deduct points. Please try again.");
+      }
+    }
   };
 
 
@@ -109,7 +136,7 @@ const KamgarForm = () => {
                 </div>
 
             <div className="d-flex gap-3 mt-5 mb-3 justify-content-center">
-              <button className="btn btn-primary btn-lg" onClick={()=>downloadFrontSide(formData.name)}>
+              <button className="btn btn-primary btn-lg" onClick={handleDownloadClick}>
                 Download
               </button>
               <button className="btn btn-danger btn-lg" onClick={handleReset}>

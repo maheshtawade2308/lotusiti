@@ -8,6 +8,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import GenerateKamgarId from './components/KamgarID/GenerateKamgarId';
 import KamgarForm from './components/KamgarID/KamgarForm';
 import Navbar from './components/pages/Navbar';
+import Dashboard from './components/pages/Dashboard';
 import RegisterUser from './components/supabase/RegisterUser';
 import UserList from './components/supabase/UserList';
 import Footer from './components/pages/Footer';
@@ -21,6 +22,16 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<LoginPage />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/farmeridcard"

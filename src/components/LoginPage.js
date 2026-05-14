@@ -20,7 +20,7 @@ function LoginPage() {
 
     // SUCCESS
     toast.success("यशस्वी लॉगिन!");
-    navigate("/farmeridcard");
+    navigate("/dashboard");
   } 
   catch (err) {
     console.error("Supabase error:", err.message);
