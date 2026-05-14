@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
-import Navbar from "../pages/Navbar";
 
 // Excel export
 import * as XLSX from "xlsx";

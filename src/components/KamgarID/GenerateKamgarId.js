@@ -55,7 +55,7 @@ const GenerateKamgarId = ({ details }) => {
           </div>
          <div>
             <div className="k-photo-box">
-              {photo ? <img src={photo} alt="Photo" /> : <span>Photo</span>}
+              {photo ? <img src={photo} alt="Kamgar Profile" /> : <span>Photo</span>}
             </div>
             <div className="k-qr">
               <QRCodeGenerator mobile={details.mobile} regId={details.registrationNumber} />

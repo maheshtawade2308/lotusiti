@@ -20,7 +20,6 @@ const KamgarForm = () => {
     photo: null,
   });
 
-  const [submitted, setSubmitted] = useState(false);
   const { profile, deductPoints } = useAuth();
 
   const handleChange = (e) => {
@@ -34,7 +33,6 @@ const KamgarForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
   };
 
   const handleReset = () => {

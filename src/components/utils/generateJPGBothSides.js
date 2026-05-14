@@ -29,8 +29,7 @@ export const generateJPGBothSides = async (name) => {
   const imgData = combinedCanvas.toDataURL('image/jpeg', 1.0);
   const link = document.createElement('a');
   link.href = imgData;
-  // Sanitize name for filename (remove spaces, special characters)
-  const safeName = name.trim().replace(/\s+/g, '_').replace(/[^\w\-]/g, '');
+  const safeName = name.trim().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
   link.download = `${safeName}_FarmerId.jpg`;
 
 

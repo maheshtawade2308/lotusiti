@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# Lotus Computer Institute - ID Card Generator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive React-based web application for generating and managing Farmer (👨‍🌾) and Kamgar (👷‍♂️) Identity Cards. Built with a modern tech stack, this application features user authentication, a dedicated admin dashboard, and a built-in credit/balance points system for downloading generated ID cards.
 
-## Available Scripts
+## 🌟 Key Features
 
-In the project directory, you can run:
+*   **User Authentication & Authorization**: Secure login and registration powered by Supabase. Distinguishes between normal `user` and `admin` roles.
+*   **Role-Based Dashboards**: 
+    *   **Users**: Can view their available Balance Points and quickly access ID generation tools.
+    *   **Admins**: Full access to user management, balance top-ups, and unlimited ID downloads without point deductions.
+*   **Farmer ID Generation**: Form-driven creation of Farmer ID cards with dual-language support (English/Marathi transliteration) and land records management.
+*   **Kamgar ID Generation**: Easy-to-use form for creating Kamgar ID cards with QR code integration and profile photos.
+*   **Balance Points System**: Users must spend "Balance Points" to download generated ID cards (10 points per download). Admins can manage these points via the User List dashboard.
+*   **High-Quality Exports**: Generates production-ready, front-and-back JPG images for easy printing.
 
-### `npm start`
+## 🚀 Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+*   **Frontend**: React (Create React App)
+*   **Routing**: React Router DOM
+*   **Styling**: Vanilla CSS & Bootstrap 5
+*   **Database & Auth**: Supabase
+*   **Notifications**: React Toastify
+*   **Exports**: HTML2Canvas, jsPDF, XLSX (for admin reports)
+*   **Other Utilities**: Axios (for Google Input Tools transliteration API)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📦 Installation & Setup
 
-### `npm test`
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/maheshtawade2308/lotusiti.git
+   cd lotusiti
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-### `npm run build`
+3. **Configure Environment Variables:**
+   Create a `.env.local` file in the root directory and add your Supabase credentials:
+   ```env
+   REACT_APP_SUPABASE_URL=your_supabase_project_url
+   REACT_APP_SUPABASE_KEY=your_supabase_anon_key
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **Start the development server:**
+   ```bash
+   npm start
+   ```
+   The application will run locally at `http://localhost:3000`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🗄️ Database Schema
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This project relies on a `profiles` table in Supabase. Ensure your table is structured as follows:
 
-### `npm run eject`
+| Column Name      | Type        | Default Value | Description |
+|------------------|-------------|---------------|-------------|
+| `id`             | `uuid`      | Auth UID      | Primary Key, links to Supabase Auth |
+| `name`           | `text`      |               | User's full name |
+| `email`          | `text`      |               | User's email |
+| `mobile`         | `text`      |               | User's phone number |
+| `address`        | `text`      |               | User's city/address |
+| `gender`         | `text`      |               | User's gender |
+| `role`           | `text`      | `user`        | Defines permissions (`user` or `admin`) |
+| `balance_points` | `int4`      | `0`           | Points used for downloading ID cards |
+| `created_at`     | `timestamp` | `now()`       | Account creation date |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🛠️ Usage Workflow
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Admin Setup**: First, register an account directly in Supabase and manually change the `role` column to `admin` in your database.
+2. **User Registration**: Log in with your new admin account. From the dashboard, navigate to **Register User** to create standard user accounts.
+3. **Point Management**: As an admin, go to **User List** and edit a user to assign them Balance Points.
+4. **Card Generation**: Log in as the newly created user, navigate to the Farmer or Kamgar ID section, fill in the details, and click download. 10 points will automatically be deducted from the user's balance.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📄 License
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is proprietary and intended for use by Lotus Computer Institute.

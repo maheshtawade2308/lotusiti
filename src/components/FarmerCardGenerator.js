@@ -2,12 +2,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FormSection from '../components/FormSection';
 import CardPreview from '../components/CardPreview';
-import { ToastContainer, toast } from 'react-toastify';  // Import ToastContainer and toast
+import { ToastContainer } from 'react-toastify';  // Import ToastContainer
 import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
-import { useNavigate } from 'react-router-dom';
-import Navbar from './pages/Navbar';
+
  function FarmerCardGenerator(){
-  const navigate = useNavigate();
  const [formData, setFormData] = useState({
     id: '',
     aadhaar: '',
@@ -27,16 +25,6 @@ import Navbar from './pages/Navbar';
   });
 
   const [landRecords, setLandRecords] = useState([]);
-
-  const handlePrint = () => {
-  const printContents = document.getElementById('print-area').innerHTML;
-  const originalContents = document.body.innerHTML;
-
-  document.body.innerHTML = printContents;
-  window.print();
-  document.body.innerHTML = originalContents;
-};
-  // const handleDownload = () => generatePDF(formData);
 
   return (
     <div className="container mt-4">

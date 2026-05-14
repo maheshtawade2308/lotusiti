@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FarmerIdCard from './FarmerIdCard';
 import {generateJPGBothSides } from '../components/utils/generateJPGBothSides';
 import { useAuth } from '../components/auth/AuthContext';

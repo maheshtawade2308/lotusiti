@@ -9,14 +9,13 @@ function LoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
  const handleLogin = async (e) => {
   e.preventDefault();
 
   try {
-    const data = await login({ email, password });
+    await login({ email, password });
 
     // SUCCESS
     toast.success("यशस्वी लॉगिन!");
