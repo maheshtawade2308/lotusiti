@@ -1,6 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
+import './components/css/global.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import FarmerCardGenerator from './components/FarmerCardGenerator';

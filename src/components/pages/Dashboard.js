@@ -2,79 +2,78 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../css/global.css";
 
 const Dashboard = () => {
   const { profile } = useAuth();
 
   return (
-    <div className="container mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className="container mt-4 pb-5">
+
+      {/* Welcome Header */}
+      <div className="lotus-page-header mb-4">
         <div>
-          <h2>Dashboard</h2>
-          <h5 className="text-muted">Welcome, {profile?.name || "User"}!</h5>
+          <h4>📊 Dashboard</h4>
+          <p className="mb-0 text-light opacity-75" style={{ fontSize: "0.9rem" }}>
+            Welcome back, <strong>{profile?.name || "User"}</strong>! 👋
+          </p>
         </div>
         {profile?.role === "user" && (
-          <div className="alert alert-warning mb-0 fw-bold shadow-sm py-2 px-4 rounded-pill">
+          <div className="balance-badge">
             ⭐ Balance Points: {profile?.balance_points || 0}
           </div>
         )}
       </div>
 
+      {/* Cards */}
       <div className="row g-4">
-        {/* Card: Farmer ID */}
-        <div className="col-md-6 col-lg-4">
-          <div className="card h-100 shadow-sm border-0 bg-light text-center">
-            <div className="card-body py-5">
-              <h1 className="display-4 mb-3">👨‍🌾</h1>
-              <h3 className="card-title fw-bold">Farmer ID</h3>
-              <p className="card-text text-muted mb-4">Generate and download Farmer Identity Cards.</p>
-              <Link to="/farmeridcard" className="btn btn-primary btn-lg rounded-pill px-4">
-                Open Farmer ID
-              </Link>
-            </div>
+
+        {/* Farmer ID */}
+        <div className="col-sm-6 col-lg-4">
+          <div className="lotus-dash-card card-farmer h-100 p-4 text-center">
+            <div className="card-icon">👨‍🌾</div>
+            <h5 className="fw-bold mb-1">Farmer ID</h5>
+            <p className="text-muted small mb-4">Generate & download Farmer Identity Cards instantly.</p>
+            <Link to="/farmeridcard" className="btn btn-success rounded-pill px-4 fw-semibold">
+              Open Farmer ID →
+            </Link>
           </div>
         </div>
 
-        {/* Card: Kamgar ID */}
-        <div className="col-md-6 col-lg-4">
-          <div className="card h-100 shadow-sm border-0 bg-light text-center">
-            <div className="card-body py-5">
-              <h1 className="display-4 mb-3">👷‍♂️</h1>
-              <h3 className="card-title fw-bold">Kamgar ID</h3>
-              <p className="card-text text-muted mb-4">Generate and download Kamgar Identity Cards.</p>
-              <Link to="/kamgarId" className="btn btn-success btn-lg rounded-pill px-4">
-                Open Kamgar ID
-              </Link>
-            </div>
+        {/* Kamgar ID */}
+        <div className="col-sm-6 col-lg-4">
+          <div className="lotus-dash-card card-kamgar h-100 p-4 text-center">
+            <div className="card-icon">👷‍♂️</div>
+            <h5 className="fw-bold mb-1">Kamgar ID</h5>
+            <p className="text-muted small mb-4">Generate & download Kamgar Identity Cards easily.</p>
+            <Link to="/kamgarId" className="btn btn-primary rounded-pill px-4 fw-semibold">
+              Open Kamgar ID →
+            </Link>
           </div>
         </div>
 
-        {/* Admin Cards */}
+        {/* Admin-only cards */}
         {profile?.role === "admin" && (
           <>
-            <div className="col-md-6 col-lg-4">
-              <div className="card h-100 shadow-sm border-0 bg-light text-center">
-                <div className="card-body py-5">
-                  <h1 className="display-4 mb-3">👤</h1>
-                  <h3 className="card-title fw-bold">Register User</h3>
-                  <p className="card-text text-muted mb-4">Add a new user to the system.</p>
-                  <Link to="/register" className="btn btn-dark btn-lg rounded-pill px-4">
-                    Register User
-                  </Link>
-                </div>
+            <div className="col-sm-6 col-lg-4">
+              <div className="lotus-dash-card card-register h-100 p-4 text-center">
+                <div className="card-icon">👤</div>
+                <h5 className="fw-bold mb-1">Register User</h5>
+                <p className="text-muted small mb-4">Create and add a new user account to the system.</p>
+                <Link to="/register" className="btn btn-dark rounded-pill px-4 fw-semibold">
+                  Register User →
+                </Link>
               </div>
             </div>
 
-            <div className="col-md-6 col-lg-4">
-              <div className="card h-100 shadow-sm border-0 bg-light text-center">
-                <div className="card-body py-5">
-                  <h1 className="display-4 mb-3">📋</h1>
-                  <h3 className="card-title fw-bold">User List</h3>
-                  <p className="card-text text-muted mb-4">View and manage registered users and their points.</p>
-                  <Link to="/user-list" className="btn btn-info btn-lg rounded-pill px-4 text-white">
-                    View Users
-                  </Link>
-                </div>
+            <div className="col-sm-6 col-lg-4">
+              <div className="lotus-dash-card card-users h-100 p-4 text-center">
+                <div className="card-icon">📋</div>
+                <h5 className="fw-bold mb-1">User List</h5>
+                <p className="text-muted small mb-4">View, edit, manage users and track their balance points.</p>
+                <Link to="/user-list" className="btn btn-info rounded-pill px-4 fw-semibold text-white">
+                  View Users →
+                </Link>
               </div>
             </div>
           </>

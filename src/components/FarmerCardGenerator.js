@@ -1,11 +1,12 @@
  import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
 import FormSection from '../components/FormSection';
 import CardPreview from '../components/CardPreview';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../components/auth/AuthContext';
-
+import '../components/css/global.css';
  function FarmerCardGenerator(){
  const [formData, setFormData] = useState({
     id: '',
@@ -49,8 +50,19 @@ import { useAuth } from '../components/auth/AuthContext';
   }
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 pb-5">
       <ToastContainer />
+
+      {/* Page Header with cross-nav */}
+      <div className="lotus-page-header mb-4">
+        <div>
+          <h4>👨‍🌾 Farmer ID Generator</h4>
+          <p className="mb-0 opacity-75" style={{ fontSize: "0.85rem" }}>Fill the form to generate & download a Farmer Identity Card</p>
+        </div>
+        <Link to="/kamgarId" className="btn-switch-module">
+          👷‍♂️ Switch to Kamgar ID
+        </Link>
+      </div>
       <div className="row">
         <div className="col-md-7">
           <FormSection formData={formData}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../css/kamgarId.css';
+import '../css/global.css';
+import { Link } from 'react-router-dom';
 import GenerateKamgarId from './GenerateKamgarId';
 import { downloadFrontSide } from '../utils/generateJPGBothSides';
 import { useAuth } from '../auth/AuthContext';
@@ -97,7 +99,18 @@ const KamgarForm = () => {
   }
 
   return (
-    <div className='container mt-5'>
+    <div className='container mt-4 pb-5'>
+
+      {/* Page Header with cross-nav */}
+      <div className="lotus-page-header mb-4">
+        <div>
+          <h4>👷‍♂️ Kamgar ID Generator</h4>
+          <p className="mb-0 opacity-75" style={{ fontSize: "0.85rem" }}>Fill the form to generate & download a Kamgar Identity Card</p>
+        </div>
+        <Link to="/farmeridcard" className="btn-switch-module">
+          👨‍🌾 Switch to Farmer ID
+        </Link>
+      </div>
       <div className="row">
         <form onSubmit={handleSubmit} className="row g-3">
           {/* Form Section */}
