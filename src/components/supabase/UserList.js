@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
+import RegisterUser from "./RegisterUser";
 
 // Excel export
 import * as XLSX from "xlsx";
@@ -18,14 +19,11 @@ export default function UserList() {
   const pageSize = 5;
 
   const [editUser, setEditUser] = useState(null);
-
-
+  const [showAddUser, setShowAddUser] = useState(false);
 
   useEffect(() => {
     fetchUsers();
   }, []);
-
-  // If non-admin tries to open this page
 
   async function fetchUsers() {
     const { data, error } = await supabase
@@ -41,7 +39,6 @@ export default function UserList() {
   const deleteUser = async (id) => {
     if (!window.confirm("Delete this user? This will permanently remove the user from all records.")) return;
 
-    // Delete from auth.users via secure RPC function (profiles will cascade automatically)
     const { error } = await supabase.rpc("delete_user_by_id", { user_id: id });
 
     if (error) {
@@ -131,9 +128,11 @@ export default function UserList() {
         <div className="d-flex justify-content-between align-items-center">
           <h2>👥 Registered Users</h2>
 
-          {/* Export buttons */}
-          <div>
-            <button className="btn btn-success me-2" onClick={exportExcel}>
+          <div className="d-flex gap-2">
+            <button className="btn btn-primary" onClick={() => setShowAddUser(true)}>
+              ➕ Add User
+            </button>
+            <button className="btn btn-success" onClick={exportExcel}>
               📗 Export Excel
             </button>
             <button className="btn btn-danger" onClick={exportPDF}>
@@ -235,7 +234,7 @@ export default function UserList() {
 
         {/* EDIT MODAL */}
         {editUser && (
-          <div className="modal show d-block">
+          <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
             <div className="modal-dialog">
               <div className="modal-content">
 
@@ -248,6 +247,7 @@ export default function UserList() {
                 </div>
 
                 <div className="modal-body">
+                  <label className="form-label fw-bold">Name</label>
                   <input
                     className="form-control mb-2"
                     value={editUser.name}
@@ -255,6 +255,7 @@ export default function UserList() {
                       setEditUser({ ...editUser, name: e.target.value })
                     }
                   />
+                  <label className="form-label fw-bold">Mobile</label>
                   <input
                     className="form-control mb-2"
                     value={editUser.mobile}
@@ -262,6 +263,7 @@ export default function UserList() {
                       setEditUser({ ...editUser, mobile: e.target.value })
                     }
                   />
+                  <label className="form-label fw-bold">Address</label>
                   <textarea
                     className="form-control mb-2"
                     value={editUser.address}
@@ -309,6 +311,33 @@ export default function UserList() {
             </div>
           </div>
         )}
+
+        {/* ADD USER MODAL — reuses RegisterUser component */}
+        {showAddUser && (
+          <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content">
+
+                <div className="modal-header">
+                  <h5 className="modal-title">➕ Add New User</h5>
+                  <button className="btn-close" onClick={() => setShowAddUser(false)}></button>
+                </div>
+
+                <div className="modal-body">
+                  <RegisterUser
+                    isModal={true}
+                    onSuccess={() => {
+                      setShowAddUser(false);
+                      fetchUsers();
+                    }}
+                  />
+                </div>
+
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </>
   );

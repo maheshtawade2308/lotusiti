@@ -19,7 +19,28 @@ function IdCardFront({ formData }) {
   }
 
   return (
-    <div className="id-card front" id="card-front">
+    <div className="id-card front" id="card-front" style={{ position: "relative" }}>
+      {/* Watermark overlay - hidden during download */}
+      <div id="farmer-watermark" style={{
+        position: "absolute",
+        top: 0, left: 0, right: 0, bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        pointerEvents: "none",
+        zIndex: 10,
+      }}>
+        <span style={{
+          fontSize: "28px",
+          fontWeight: "bold",
+          color: "rgba(180, 0, 0, 0.22)",
+          transform: "rotate(-35deg)",
+          whiteSpace: "nowrap",
+          userSelect: "none",
+          letterSpacing: "2px",
+        }}>Lotus Computer Services</span>
+      </div>
+
       <div className="header green-bar">
         <div className="logo-title">
           <img src={logo} alt="Agri Record" className="logo" />
@@ -50,7 +71,7 @@ function IdCardFront({ formData }) {
           <p style={{
             margin: "2px 0",
             whiteSpace: "nowrap",      // Prevent line breaks
-            
+
           }}><strong>आधार नं / Aadhaar No. :</strong> {aadhaar || "-----------"}</p>
           <img src={leaves} alt="leaves" className="leaves" />
         </div>

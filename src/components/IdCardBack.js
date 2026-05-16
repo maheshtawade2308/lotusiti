@@ -6,7 +6,28 @@ function IdCardBack({ formData, landRecords = [] }) {
   const { address } = formData;
 
   return (
-    <div className="id-card back" id="card-back">
+    <div className="id-card back" id="card-back" style={{ position: "relative" }}>
+      {/* Watermark overlay - hidden during download */}
+      <div id="farmer-watermark-back" style={{
+        position: "absolute",
+        top: 0, left: 0, right: 0, bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        pointerEvents: "none",
+        zIndex: 10,
+      }}>
+        <span style={{
+          fontSize: "28px",
+          fontWeight: "bold",
+          color: "rgba(180, 0, 0, 0.22)",
+          transform: "rotate(-35deg)",
+          whiteSpace: "nowrap",
+          userSelect: "none",
+          letterSpacing: "2px",
+        }}>Lotus Online Services</span>
+      </div>
+
       <div className="address-section">
         <h5>संपूर्ण पत्ता / Address</h5>
         <p>{address || "-----------"}</p>
@@ -44,11 +65,11 @@ function IdCardBack({ formData, landRecords = [] }) {
         )}
       </div>
       <div>
-      <img src={leaves} alt="leaves" className="leaves-bottom-left" />
-      <div className="note">
-        हे कार्ड वैयक्तिक वापरासाठी असून सरकारी ओळखपत्र म्हणून मान्य नाही.
-      </div>
-      <img src={leaves} alt="leaves" className="leaves-bottom" />
+        <img src={leaves} alt="leaves" className="leaves-bottom-left" />
+        <div className="note">
+          हे कार्ड वैयक्तिक वापरासाठी असून सरकारी ओळखपत्र म्हणून मान्य नाही.
+        </div>
+        <img src={leaves} alt="leaves" className="leaves-bottom" />
       </div>
     </div>
   );

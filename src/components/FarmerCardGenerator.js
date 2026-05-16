@@ -2,8 +2,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FormSection from '../components/FormSection';
 import CardPreview from '../components/CardPreview';
-import { ToastContainer } from 'react-toastify';  // Import ToastContainer
-import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../components/auth/AuthContext';
 
  function FarmerCardGenerator(){
  const [formData, setFormData] = useState({
@@ -25,6 +26,27 @@ import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
   });
 
   const [landRecords, setLandRecords] = useState([]);
+  const { profile } = useAuth();
+
+  // Block regular users with insufficient balance
+  const isBlocked = profile?.role === 'user' && (profile?.balance_points ?? 0) < 10;
+
+  if (isBlocked) {
+    return (
+      <div className="container mt-5 text-center">
+        <div className="alert alert-danger p-5 shadow rounded">
+          <h2>⚠️ Insufficient Balance</h2>
+          <p className="fs-5 mt-3">
+            You need at least <strong>10 balance points</strong> to generate a Farmer ID card.
+          </p>
+          <p className="text-muted">
+            Your current balance: <strong>{profile?.balance_points ?? 0} points</strong>
+          </p>
+          <p>Please contact your administrator to recharge your balance.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-4">
@@ -43,4 +65,4 @@ import 'react-toastify/dist/ReactToastify.css';  // Import the CSS
     </div>
  )}
 
- export default FarmerCardGenerator;
+ export default FarmerCardGenerator;

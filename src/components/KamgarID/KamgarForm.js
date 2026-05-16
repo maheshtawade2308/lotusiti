@@ -23,6 +23,9 @@ const KamgarForm = () => {
 
   const { profile, deductPoints } = useAuth();
 
+  // Block regular users with insufficient balance
+  const isBlocked = profile?.role === 'user' && (profile?.balance_points ?? 0) < 10;
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -75,6 +78,23 @@ const KamgarForm = () => {
   };
 
 
+
+  if (isBlocked) {
+    return (
+      <div className="container mt-5 text-center">
+        <div className="alert alert-danger p-5 shadow rounded">
+          <h2>⚠️ Insufficient Balance</h2>
+          <p className="fs-5 mt-3">
+            You need at least <strong>10 balance points</strong> to generate a Kamgar ID card.
+          </p>
+          <p className="text-muted">
+            Your current balance: <strong>{profile?.balance_points ?? 0} points</strong>
+          </p>
+          <p>Please contact your administrator to recharge your balance.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='container mt-5'>

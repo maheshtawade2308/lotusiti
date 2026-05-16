@@ -7,7 +7,7 @@ import QRCodeGenerator from "../utils/QRCodeGeneratorKid";
 
 const GenerateKamgarId = ({ details }) => {
   const { photo } = details;
-    function formatDate(dateStr) {
+  function formatDate(dateStr) {
     if (!dateStr) return "-----------";
     const date = new Date(dateStr);
     if (isNaN(date)) return dateStr;
@@ -21,9 +21,30 @@ const GenerateKamgarId = ({ details }) => {
     <div className='container d-flex justify-content-center align-items-center'>
       <div className="k-idcard-container" style={{
         backgroundImage: `url(${watermark})`,
-        backgroundSize: "cover"
-        
+        backgroundSize: "cover",
+        position: "relative",
       }} id="card-front" >
+
+        {/* Watermark overlay - hidden during download */}
+        <div id="kamgar-watermark" style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0, bottom: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          pointerEvents: "none",
+          zIndex: 10,
+        }}>
+          <span style={{
+            fontSize: "28px",
+            fontWeight: "bold",
+            color: "rgba(180, 0, 0, 0.22)",
+            transform: "rotate(-35deg)",
+            whiteSpace: "nowrap",
+            userSelect: "none",
+            letterSpacing: "2px",
+          }}>Lotus Computer Services</span>
+        </div>
         <div className="k-idcard-header">
           <img src={leftLogo} alt="Left Logo" className="k-logo left" />
           <div className="k-header-text">
@@ -49,17 +70,17 @@ const GenerateKamgarId = ({ details }) => {
             <p><strong>कामाचा प्रकार:</strong> {details.workType || "-----------"}</p>
             <div className="k-row">
               <p><strong>नोंदणीचे ठिकाण:</strong> {details.regplace || "-----------"}</p>
-              <p><strong>जिल्हा:</strong> {details.district|| "-----------"}</p>
+              <p><strong>जिल्हा:</strong> {details.district || "-----------"}</p>
             </div>
 
           </div>
-         <div>
+          <div>
             <div className="k-photo-box">
               {photo ? <img src={photo} alt="Kamgar Profile" /> : <span>Photo</span>}
             </div>
             <div className="k-qr">
               <QRCodeGenerator mobile={details.mobile} regId={details.registrationNumber} />
-            </div>  
+            </div>
           </div>
         </div>
       </div>
