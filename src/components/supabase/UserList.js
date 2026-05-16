@@ -19,17 +19,17 @@ export default function UserList() {
 
   const [editUser, setEditUser] = useState(null);
 
-  
+
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-   // If non-admin tries to open this page
-  
+  // If non-admin tries to open this page
+
   async function fetchUsers() {
     const { data, error } = await supabase
-      .from("profiles")
+      .from("user_profiles_with_last_login")
       .select("*")
       .eq("role", "user")
       .order("created_at", { ascending: false });
@@ -39,9 +39,17 @@ export default function UserList() {
   }
 
   const deleteUser = async (id) => {
-    if (!window.confirm("Delete this user?")) return;
+    if (!window.confirm("Delete this user? This will permanently remove the user from all records.")) return;
 
-    await supabase.from("profiles").delete().eq("id", id);
+    // Delete from auth.users via secure RPC function (profiles will cascade automatically)
+    const { error } = await supabase.rpc("delete_user_by_id", { user_id: id });
+
+    if (error) {
+      console.error("Delete failed:", error.message);
+      alert("Failed to delete user: " + error.message);
+      return;
+    }
+
     setUsers(users.filter((u) => u.id !== id));
   };
 
@@ -158,7 +166,7 @@ export default function UserList() {
                   <th>Mobile</th>
                   <th>Center Name</th>
                   <th>Balance</th>
-                  <th>Registered</th>
+                  <th>Last Logged On</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -171,7 +179,7 @@ export default function UserList() {
                     <td>{u.mobile}</td>
                     <td>{u.center_name || "-"}</td>
                     <td>{u.balance_points || 0}</td>
-                    <td>{new Date(u.created_at).toLocaleString()}</td>
+                    <td>{u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString() : "Never"}</td>
 
                     <td>
                       <button

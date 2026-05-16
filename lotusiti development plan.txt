@@ -14,3 +14,32 @@ for normal user balance points should be visible in dashboard
  
  
  in kamgar id page add a button to download back side. when the button is clicked back side.png should be downloaded
+ 
+ Inside view users when user clicks on 
+ 
+ 
+ 
+ SQL Supabase**
+ 
+ 1. ALTER TABLE public.profiles
+  DROP CONSTRAINT IF EXISTS profiles_id_fkey,
+  ADD CONSTRAINT profiles_id_fkey
+    FOREIGN KEY (id)
+    REFERENCES auth.users(id)
+    ON DELETE CASCADE;
+ 
+ 
+ 2. CREATE OR REPLACE FUNCTION public.delete_user_by_id(user_id uuid)
+RETURNS void AS $$
+BEGIN
+  DELETE FROM auth.users WHERE id = user_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+** last signed in info
+CREATE OR REPLACE VIEW public.user_profiles_with_last_login AS
+SELECT
+  p.*,
+  u.last_sign_in_at
+FROM public.profiles p
+JOIN auth.users u ON p.id = u.id;
