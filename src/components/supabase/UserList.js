@@ -21,8 +21,9 @@ export default function UserList() {
   const [page, setPage] = useState(1);
   const pageSize = 5;
 
-  const [editUser, setEditUser] = useState(null);
-  const [showAddUser, setShowAddUser] = useState(false);
+  const [editUser,     setEditUser]     = useState(null);
+  const [showAddUser,  setShowAddUser]  = useState(false);
+  const [lastLoginSort, setLastLoginSort] = useState('none'); // 'none' | 'asc' | 'desc'
 
   useEffect(() => {
     fetchUsers();
@@ -97,9 +98,20 @@ export default function UserList() {
       u.mobile?.includes(search)
   );
 
+  // Sort by last_sign_in_at — nulls always go to the bottom
+  const sortedUsers = [...filteredUsers].sort((a, b) => {
+    if (lastLoginSort === 'none') return 0;
+    const ta = a.last_sign_in_at ? new Date(a.last_sign_in_at).getTime() : null;
+    const tb = b.last_sign_in_at ? new Date(b.last_sign_in_at).getTime() : null;
+    if (ta === null && tb === null) return 0;
+    if (ta === null) return 1;   // a has no login → push down
+    if (tb === null) return -1;  // b has no login → push down
+    return lastLoginSort === 'asc' ? ta - tb : tb - ta;
+  });
+
   const start = (page - 1) * pageSize;
-  const paginatedUsers = filteredUsers.slice(start, start + pageSize);
-  const totalPages = Math.ceil(filteredUsers.length / pageSize);
+  const paginatedUsers = sortedUsers.slice(start, start + pageSize);
+  const totalPages = Math.ceil(sortedUsers.length / pageSize);
 
   // ---------------- EXPORT TO EXCEL -------------------
   const exportExcel = () => {
@@ -193,7 +205,30 @@ export default function UserList() {
                   <th>Mobile</th>
                   <th>Center Name</th>
                   <th>Balance</th>
-                  <th>Last Logged On</th>
+                  <th style={{ whiteSpace: 'nowrap' }}>
+                    <div className="d-flex align-items-center gap-2">
+                      <span>Last Logged On</span>
+                      <button
+                        title={lastLoginSort === 'none' ? 'Sort' : lastLoginSort === 'desc' ? 'Newest first' : 'Oldest first'}
+                        onClick={() => {
+                          setLastLoginSort(s => s === 'none' ? 'desc' : s === 'desc' ? 'asc' : 'none');
+                          setPage(1);
+                        }}
+                        style={{
+                          width: 20, height: 20,
+                          padding: 0, border: '1px solid #cbd5e1',
+                          borderRadius: 4, background: lastLoginSort !== 'none' ? '#4f46e5' : '#f8fafc',
+                          color: lastLoginSort !== 'none' ? '#fff' : '#64748b',
+                          fontSize: 11, lineHeight: 1,
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                          cursor: 'pointer', flexShrink: 0,
+                          transition: 'all 0.15s',
+                        }}
+                      >
+                        {lastLoginSort === 'desc' ? '↓' : lastLoginSort === 'asc' ? '↑' : '↕'}
+                      </button>
+                    </div>
+                  </th>
                   <th>Actions</th>
                 </tr>
               </thead>
