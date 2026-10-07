@@ -12,6 +12,7 @@ import Dashboard from './components/pages/Dashboard';
 import RegisterUser from './components/supabase/RegisterUser';
 import UserList from './components/supabase/UserList';
 import Footer from './components/pages/Footer';
+import AdjustMahaID from './components/MahaID/AdjustMahaID';
 import { AuthProvider } from './components/auth/AuthContext';
 
 
@@ -69,6 +70,16 @@ function App() {
               <ProtectedRoute>
                 <Navbar />
                 <UserList />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/mahaId"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <AdjustMahaID />
               </ProtectedRoute>
             }
           />

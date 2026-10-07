@@ -52,6 +52,20 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* MahaID Print Utility */}
+        <div className="col-sm-6 col-lg-4">
+          <div className="lotus-dash-card card-mahaid h-100 p-4 text-center">
+            <div className="card-icon">🪪</div>
+            <h5 className="fw-bold mb-1">MahaID Print</h5>
+            <p className="text-muted small mb-4">
+              महासारथी / MahaID PDF वरून प्रिंट-रेडी इमेज बनवा (4×6 &amp; A4).
+            </p>
+            <Link to="/mahaId" className="btn btn-warning rounded-pill px-4 fw-semibold text-white">
+              Open MahaID →
+            </Link>
+          </div>
+        </div>
+
         {/* Admin-only cards */}
         {profile?.role === "admin" && (
           <>
