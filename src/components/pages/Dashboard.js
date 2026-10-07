@@ -66,6 +66,20 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Transactions */}
+        <div className="col-sm-6 col-lg-4">
+          <div className="lotus-dash-card card-transactions h-100 p-4 text-center">
+            <div className="card-icon">💳</div>
+            <h5 className="fw-bold mb-1">Transactions</h5>
+            <p className="text-muted small mb-4">
+              View debit &amp; credit transaction history
+            </p>
+            <Link to="/transactions" className="btn btn-info rounded-pill px-4 fw-semibold text-white">
+              View Transactions →
+            </Link>
+          </div>
+        </div>
+
         {/* Admin-only cards */}
         {profile?.role === "admin" && (
           <>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 import RegisterUser from "./RegisterUser";
+import { useNavigate } from "react-router-dom";
+import { FaWhatsapp } from "react-icons/fa";
 
 // Excel export
 import * as XLSX from "xlsx";
@@ -11,6 +13,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
 export default function UserList() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -53,10 +56,35 @@ export default function UserList() {
   const updateUser = async () => {
     const { id, name, mobile, address, gender, balance_points, center_name } = editUser;
 
-    await supabase
+    // Snapshot the OLD balance before saving (editUser was pre-filled from the user row)
+    const oldUser = users.find(u => u.id === id);
+    const oldBalance = oldUser?.balance_points ?? 0;
+    const newBalance = parseInt(balance_points) || 0;
+    const diff = newBalance - oldBalance;
+
+    // Save profile changes
+    const { error } = await supabase
       .from("profiles")
-      .update({ name, mobile, address, gender, balance_points, center_name })
+      .update({ name, mobile, address, gender, balance_points: newBalance, center_name })
       .eq("id", id);
+
+    if (error) {
+      console.error("Error updating user:", error);
+      return;
+    }
+
+    // Log a transaction only if balance actually changed
+    if (diff !== 0) {
+      await supabase.from("transactions").insert({
+        user_id:       id,
+        type:          diff > 0 ? 'credit' : 'debit',
+        amount:        Math.abs(diff),
+        balance_after: newBalance,
+        description:   diff > 0
+          ? `Credited by admin (+${diff} Rs)`   
+          : `Debited by admin (${diff} Rs)`,
+      });
+    }
 
     setEditUser(null);
     fetchUsers();
@@ -181,26 +209,75 @@ export default function UserList() {
                     <td>{u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString() : "Never"}</td>
 
                     <td>
-                      <button
-                        className="btn btn-sm btn-primary me-2"
-                        onClick={() => setEditUser(u)}
-                      >
-                        ✏ Edit
-                      </button>
+                      <div className="d-flex align-items-center gap-1" style={{ flexWrap: 'nowrap' }}>
+                        {/* Edit */}
+                        <button
+                          title="Edit User"
+                          onClick={() => setEditUser(u)}
+                          style={{
+                            width: 32, height: 32, border: 'none', borderRadius: 8,
+                            background: '#eff6ff', color: '#2563eb',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
+                            flexShrink: 0,
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.color = '#fff'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.color = '#2563eb'; }}
+                        >
+                          ✏️
+                        </button>
 
-                      <button
-                        className="btn btn-sm btn-success me-2"
-                        onClick={() => sendWhatsApp(u.mobile)}
-                      >
-                        📩 WhatsApp
-                      </button>
+                        {/* WhatsApp */}
+                        <button
+                          title="Send WhatsApp"
+                          onClick={() => sendWhatsApp(u.mobile)}
+                          style={{
+                            width: 32, height: 32, border: 'none', borderRadius: 8,
+                            background: '#f0fdf4', color: '#16a34a',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
+                            flexShrink: 0,
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#16a34a'; e.currentTarget.style.color = '#fff'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#f0fdf4'; e.currentTarget.style.color = '#16a34a'; }}
+                        >
+                          <FaWhatsapp size={17} />
+                        </button>
 
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => deleteUser(u.id)}
-                      >
-                        🗑 Delete
-                      </button>
+                        {/* Transactions */}
+                        <button
+                          title="View Transactions"
+                          onClick={() => navigate(`/transactions?userId=${u.id}&userName=${encodeURIComponent(u.name)}`)}
+                          style={{
+                            width: 32, height: 32, border: 'none', borderRadius: 8,
+                            background: '#ecfeff', color: '#0891b2',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
+                            flexShrink: 0,
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#0891b2'; e.currentTarget.style.color = '#fff'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#ecfeff'; e.currentTarget.style.color = '#0891b2'; }}
+                        >
+                          💳
+                        </button>
+
+                        {/* Delete */}
+                        <button
+                          title="Delete User"
+                          onClick={() => deleteUser(u.id)}
+                          style={{
+                            width: 32, height: 32, border: 'none', borderRadius: 8,
+                            background: '#fef2f2', color: '#dc2626',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
+                            flexShrink: 0,
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.color = '#fff'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.color = '#dc2626'; }}
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

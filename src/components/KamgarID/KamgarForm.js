@@ -59,7 +59,7 @@ const KamgarForm = () => {
         return;
       }
 
-      const deducted = await deductPoints(10);
+      const deducted = await deductPoints(10, `Kamgar ID - ${formData.name}`);
       if (deducted) {
         await downloadFrontSide(formData.name);
         toast.success("Downloaded successfully! 10 points deducted.");

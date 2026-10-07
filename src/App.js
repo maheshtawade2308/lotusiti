@@ -13,6 +13,7 @@ import RegisterUser from './components/supabase/RegisterUser';
 import UserList from './components/supabase/UserList';
 import Footer from './components/pages/Footer';
 import AdjustMahaID from './components/MahaID/AdjustMahaID';
+import Transactions from './components/supabase/Transactions';
 import { AuthProvider } from './components/auth/AuthContext';
 
 
@@ -80,6 +81,16 @@ function App() {
               <ProtectedRoute>
                 <Navbar />
                 <AdjustMahaID />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/transactions"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Transactions />
               </ProtectedRoute>
             }
           />

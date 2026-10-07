@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }) => {
   // ------------------------------------------------
   // Balance Points Handlers
   // ------------------------------------------------
-  const deductPoints = async (pointsToDeduct) => {
+  const deductPoints = async (pointsToDeduct, description = '') => {
     if (!profile || profile.role === 'admin') return true;
     
     if (profile.balance_points < pointsToDeduct) {
@@ -140,11 +140,20 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
 
+    // Log transaction
+    await supabase.from("transactions").insert({
+      user_id:       profile.id,
+      type:          'debit',
+      amount:        pointsToDeduct,
+      balance_after: newBalance,
+      description:   description || 'Points deducted',
+    });
+
     setProfile({ ...profile, balance_points: newBalance });
     return true;
   };
 
-  const updateBalancePoints = async (userId, pointsToAdd) => {
+  const updateBalancePoints = async (userId, pointsToAdd, description = '') => {
     // Only fetch current points and add, for admin use
     const { data: userProfile, error: fetchError } = await supabase
       .from("profiles")
@@ -167,6 +176,16 @@ export const AuthProvider = ({ children }) => {
       console.error("Error updating points:", error);
       return false;
     }
+
+    // Log transaction
+    await supabase.from("transactions").insert({
+      user_id:       userId,
+      type:          'credit',
+      amount:        pointsToAdd,
+      balance_after: newBalance,
+      description:   description || 'Points credited by admin',
+    });
+
     return true;
   };
 

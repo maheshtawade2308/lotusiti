@@ -25,7 +25,7 @@ function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
         return;
       }
       
-      const deducted = await deductPoints(10);
+      const deducted = await deductPoints(10, `Farmer ID - ${formData.name_en}`);
       if (deducted) {
         await generateJPGBothSides(formData.name_en);
         toast.success("Downloaded successfully! 10 points deducted.");
