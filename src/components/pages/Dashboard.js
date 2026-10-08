@@ -54,7 +54,8 @@ const Dashboard = () => {
 
         {/* MahaID Print Utility */}
         <div className="col-sm-6 col-lg-4">
-          <div className="lotus-dash-card card-mahaid h-100 p-4 text-center">
+          <div className="lotus-dash-card card-mahaid h-100 p-4 text-center position-relative">
+            <span className="badge-blinking-new">NEW</span>
             <div className="card-icon">🪪</div>
             <h5 className="fw-bold mb-1">MahaID Print</h5>
             <p className="text-muted small mb-4">

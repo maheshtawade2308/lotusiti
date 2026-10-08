@@ -242,3 +242,34 @@ body {
   0%,100% { opacity:1; }
   50%      { opacity:0.4; }
 }
+
+/* ---- Blinking New Badge for Cards ---- */
+.badge-blinking-new {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  animation: blinkPulse 1.2s infinite ease-in-out;
+  z-index: 5;
+}
+
+@keyframes blinkPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(0.92);
+    box-shadow: 0 0 2px rgba(239, 68, 68, 0.1);
+  }
+}
