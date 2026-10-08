@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import GenerateKamgarId from './GenerateKamgarId';
 import { downloadFrontSide } from '../../utils/generateJPGBothSides';
 import { useAuth } from '../auth/AuthContext';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import backSideImg from '../../assets/back side.png';
 
 
@@ -37,16 +37,33 @@ const KamgarForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
   const handleReset = () => {
     window.location.href = "/kamgarid";
   };
 
   const handleDownloadClick = async (e) => {
     e.preventDefault();
+
+    // Mandatory fields validation
+    const requiredFields = [
+      { key: 'registrationNumber', label: 'नोंदणी क्रमांक' },
+      { key: 'registrationDate',   label: 'नोंदणी दिनांक' },
+      { key: 'name',               label: 'नाव' },
+      { key: 'gender',             label: 'लिंग' },
+      { key: 'dob',                label: 'जन्मतारीख' },
+      { key: 'mobile',             label: 'भ्रमणध्वनी क्रमांक' },
+      { key: 'workType',           label: 'कामाचा प्रकार' },
+      { key: 'regplace',           label: 'नोंदणीचे ठिकाण' },
+      { key: 'district',           label: 'जिल्हा' },
+      { key: 'photo',              label: 'Photo' },
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field.key] || !formData[field.key].toString().trim()) {
+        toast.error(`कृपया आवश्यक माहिती भरा: ${field.label}`);
+        return;
+      }
+    }
 
     if (profile?.role === 'admin') {
       await downloadFrontSide(formData.name);
@@ -100,6 +117,7 @@ const KamgarForm = () => {
 
   return (
     <div className='container mt-4 pb-5'>
+      <ToastContainer />
 
       {/* Page Header with cross-nav */}
       <div className="lotus-page-header mb-4">
@@ -111,84 +129,102 @@ const KamgarForm = () => {
           👨‍🌾 Switch to Farmer ID
         </Link>
       </div>
+
       <div className="row">
-        <form onSubmit={handleSubmit} className="row g-3">
-          {/* Form Section */}
-          <div className="col-md-7">
-            <form className="row g-2">
-              <div className="col-md-6">
-                <label className="form-label">नोंदणी क्रमांक</label>
-                <input type="text" className="form-control" name="registrationNumber" value={formData.registrationNumber} onChange={handleChange} required />
-              </div>
+        {/* Form Section */}
+        <div className="col-md-7">
+          <div className="row g-2">
+            <div className="col-md-6">
+              <label className="form-label">
+                नोंदणी क्रमांक <span className="text-danger">*</span>
+              </label>
+              <input type="text" className="form-control" name="registrationNumber" value={formData.registrationNumber} onChange={handleChange} />
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">नोंदणी दिनांक</label>
-                <input type="date" className="form-control" name="registrationDate" value={formData.registrationDate} onChange={handleChange} required />
-              </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                नोंदणी दिनांक <span className="text-danger">*</span>
+              </label>
+              <input type="date" className="form-control" name="registrationDate" value={formData.registrationDate} onChange={handleChange} />
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">नाव</label>
-                <input type="text" className="form-control" name="name" value={formData.name} onChange={handleChange} required />
-              </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                नाव <span className="text-danger">*</span>
+              </label>
+              <input type="text" className="form-control" name="name" value={formData.name} onChange={handleChange} />
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">लिंग</label>
-                <select name="gender" className="form-select" value={formData.gender} onChange={handleChange} required>
-                  <option ></option>
-                  <option value="पुरुष">पुरुष </option>
-                  <option value="स्त्री">स्त्री</option>
-                </select>
-              </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                लिंग <span className="text-danger">*</span>
+              </label>
+              <select name="gender" className="form-select" value={formData.gender} onChange={handleChange}>
+                <option value="">लिंग निवडा</option>
+                <option value="पुरुष">पुरुष </option>
+                <option value="स्त्री">स्त्री</option>
+              </select>
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">जन्मतारीख</label>
-                <input type="date" className="form-control" name="dob" value={formData.dob} onChange={handleChange} required />
-              </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                जन्मतारीख <span className="text-danger">*</span>
+              </label>
+              <input type="date" className="form-control" name="dob" value={formData.dob} onChange={handleChange} />
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">भ्रमणध्वनी क्रमांक</label>
-                <input type="text" className="form-control" name="mobile" value={formData.mobile} onChange={handleChange} required />
-              </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                भ्रमणध्वनी क्रमांक <span className="text-danger">*</span>
+              </label>
+              <input type="text" className="form-control" name="mobile" value={formData.mobile} onChange={handleChange} />
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">कामाचा प्रकार</label>
-                <input type="text" className="form-control" name="workType" value={formData.workType} onChange={handleChange} required />
-              </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                कामाचा प्रकार <span className="text-danger">*</span>
+              </label>
+              <input type="text" className="form-control" name="workType" value={formData.workType} onChange={handleChange} />
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">नोंदणीचे ठिकाण</label>
-                <input type="text" className="form-control" name="regplace" value={formData.regplace} onChange={handleChange} required />
-              </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                नोंदणीचे ठिकाण <span className="text-danger">*</span>
+              </label>
+              <input type="text" className="form-control" name="regplace" value={formData.regplace} onChange={handleChange} />
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">जिल्हा</label>
-                <input type="text" className="form-control" name="district" value={formData.district} onChange={handleChange} required />
-              </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                जिल्हा <span className="text-danger">*</span>
+              </label>
+              <input type="text" className="form-control" name="district" value={formData.district} onChange={handleChange} />
+            </div>
 
-              <div className="col-md-6">
-                <label className="form-label">Upload Photo</label>
-                <input type="file" name="photo" className="form-control" accept="image/*" onChange={handleChange} />
-              </div>
-            </form>
+            <div className="col-md-6">
+              <label className="form-label">
+                Upload Photo <span className="text-danger">*</span>
+              </label>
+              <input type="file" name="photo" className="form-control" accept="image/*" onChange={handleChange} />
+            </div>
           </div>
+        </div>
 
+        <div className="col-md-5">
+          <GenerateKamgarId details={formData} />
+        </div>
 
-          <div className="col-md-5">
-            <GenerateKamgarId details={formData} />
-          </div>
-
-          <div className="d-flex gap-3 mt-5 mb-3 justify-content-center">
-            <button className="btn btn-primary btn-lg" onClick={handleDownloadClick}>
-              Download
-            </button>
-            <button className="btn btn-secondary btn-lg" onClick={handleDownloadBackSide}>
-              Download Back Side
-            </button>
-            <button className="btn btn-danger btn-lg" onClick={handleReset}>
-              Reset All
-            </button>
-          </div>
-        </form>
+        <div className="d-flex gap-3 mt-5 mb-3 justify-content-center">
+          <button type="button" className="btn btn-primary btn-lg" onClick={handleDownloadClick}>
+            Download
+          </button>
+          <button type="button" className="btn btn-secondary btn-lg" onClick={handleDownloadBackSide}>
+            Download Back Side
+          </button>
+          <button type="button" className="btn btn-danger btn-lg" onClick={handleReset}>
+            Reset All
+          </button>
+        </div>
       </div>
     </div>
   );

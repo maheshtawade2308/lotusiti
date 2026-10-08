@@ -14,6 +14,26 @@ function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {
   const handleDownloadClick = async (e) => {
     e.preventDefault();
 
+    // Mandatory fields validation (excluding Land Details)
+    const requiredFields = [
+      { key: 'id', label: 'Farmer ID' },
+      { key: 'aadhaar', label: 'Aadhaar Number' },
+      { key: 'mobile', label: 'Mobile Number' },
+      { key: 'name_en', label: 'Name (English)' },
+      { key: 'name_mr', label: 'Name (Marathi)' },
+      { key: 'dob', label: 'Date of Birth' },
+      { key: 'gender', label: 'Gender' },
+      { key: 'address', label: 'Address' },
+      { key: 'photo', label: 'Photo' },
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field.key] || !formData[field.key].toString().trim()) {
+        toast.error(`Please fill in compulsory field: ${field.label}`);
+        return;
+      }
+    }
+
     if (profile?.role === 'admin') {
       await generateJPGBothSides(formData.name_en);
       return;

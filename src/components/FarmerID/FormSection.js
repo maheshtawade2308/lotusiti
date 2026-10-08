@@ -98,35 +98,68 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
     <>
       <form>
         <div className="mb-3">
-          <label className="form-label">Farmer ID</label>
-          <input type="text" name="id" className="form-control" value={formData.id} onChange={handleFormerIdChange} />
+          <label className="form-label">
+            Farmer ID <span className="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            name="id"
+            className="form-control"
+            value={formData.id}
+            onChange={handleFormerIdChange}
+            required
+          />
         </div>
         <div className="row">
           {/* Mobile & Aadhaar */}
           <div className="col-md-6 mb-3">
-            <label className="form-label">Aadhaar Number</label>
-            <input type="text" name="aadhaar" className="form-control" value={formData.aadhaar} maxLength={14} onChange={setAddharNo} />
+            <label className="form-label">
+              Aadhaar Number <span className="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              name="aadhaar"
+              className="form-control"
+              value={formData.aadhaar}
+              maxLength={14}
+              onChange={setAddharNo}
+              required
+            />
           </div>
           <div className="col-md-6 mb-3">
-            <label className="form-label">Mobile Number</label>
-            <input type="text" name="mobile" className="form-control" value={formData.mobile} onChange={handleChange} />
+            <label className="form-label">
+              Mobile Number <span className="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              name="mobile"
+              className="form-control"
+              value={formData.mobile}
+              onChange={handleChange}
+              required
+            />
           </div>
 
         </div>
         <div className="row">
           {/* Name Fields */}
           <div className="col-md-6 mb-3">
-            <label className="form-label">Name (English)</label>
+            <label className="form-label">
+              Name (English) <span className="text-danger">*</span>
+            </label>
             <input
               type="text"
               name="name_en"
               className="form-control"
               value={formData.name_en}
               onChange={handleChange}
+              required
             />
           </div>
           <div className="col-md-6 mb-3">
-            <label className="form-label">Name (Marathi)</label>
+            <label className="form-label">
+              Name (Marathi) <span className="text-danger">*</span>
+            </label>
             <input
               type="text"
               name="name_mr"
@@ -138,6 +171,7 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
                   name_mr: e.target.value, // Allow manual edit
                 }))
               }
+              required
             />
           </div>
         </div>
@@ -145,13 +179,30 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
         {/* DOB & Gender */}
         <div className="row">
           <div className="col-md-6 mb-3">
-            <label className="form-label">Date of Birth</label>
-            <input type="date" name="dob" className="form-control" value={formData.dob} onChange={handleChange} />
+            <label className="form-label">
+              Date of Birth <span className="text-danger">*</span>
+            </label>
+            <input
+              type="date"
+              name="dob"
+              className="form-control"
+              value={formData.dob}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="col-md-6 mb-3">
-            <label className="form-label">Gender</label>
-            <select name="gender" className="form-select" value={formData.gender} onChange={handleChange}>
-              <option ></option>
+            <label className="form-label">
+              Gender <span className="text-danger">*</span>
+            </label>
+            <select
+              name="gender"
+              className="form-select"
+              value={formData.gender}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Gender</option>
               <option value="Male">पुरुष / Male</option>
               <option value="Female">स्त्री / Female</option>
             </select>
@@ -160,12 +211,29 @@ function FormSection({ formData, setFormData, landRecords, setLandRecords }) {
         <div className="row">
           {/* Address & Photo */}
           <div className="col-md-6 mb-3">
-            <label className="form-label">Address</label>
-            <textarea name="address" className="form-control" value={formData.address} onChange={handleChange} />
+            <label className="form-label">
+              Address <span className="text-danger">*</span>
+            </label>
+            <textarea
+              name="address"
+              className="form-control"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="col-md-6 mb-3">
-            <label className="form-label">Upload Photo</label>
-            <input type="file" name="photo" className="form-control" accept="image/*" onChange={handleChange} />
+            <label className="form-label">
+              Upload Photo <span className="text-danger">*</span>
+            </label>
+            <input
+              type="file"
+              name="photo"
+              className="form-control"
+              accept="image/*"
+              onChange={handleChange}
+              required
+            />
           </div>
 
         </div>
