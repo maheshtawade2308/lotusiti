@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../css/global.css";
+import "../../styles/global.css";
 
 const Dashboard = () => {
   const { profile } = useAuth();

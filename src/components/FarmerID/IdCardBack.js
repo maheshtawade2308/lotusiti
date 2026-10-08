@@ -1,6 +1,6 @@
-// components/IdCardBack.js
+// components/FarmerID/IdCardBack.js
 import React from "react";
-import leaves from "../assets/leaves.png";
+import leaves from "../../assets/leaves.png";
 
 function IdCardBack({ formData, landRecords = [] }) {
   const { address } = formData;

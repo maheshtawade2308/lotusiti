@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "../components/auth/AuthContext";
+import { useAuth } from "./AuthContext";
 import { toast, ToastContainer } from 'react-toastify';
-import '../components/css/global.css';
+import '../../styles/global.css';
 
 function LoginPage() {
   const { login } = useAuth();

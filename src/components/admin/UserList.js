@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "./supabaseClient";
+import { supabase } from "../../services/supabaseClient";
 import RegisterUser from "./RegisterUser";
 import { useNavigate } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";

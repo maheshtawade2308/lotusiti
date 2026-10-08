@@ -1,7 +1,7 @@
 import React from 'react';
 import FarmerIdCard from './FarmerIdCard';
-import {generateJPGBothSides } from '../components/utils/generateJPGBothSides';
-import { useAuth } from '../components/auth/AuthContext';
+import { generateJPGBothSides } from '../../utils/generateJPGBothSides';
+import { useAuth } from '../auth/AuthContext';
 import { toast } from 'react-toastify';
 
 function CardPreview({ formData, landRecords, setFormData, setLandRecords }) {

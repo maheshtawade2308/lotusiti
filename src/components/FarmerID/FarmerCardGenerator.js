@@ -1,12 +1,12 @@
- import React, { useState } from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
-import FormSection from '../components/FormSection';
-import CardPreview from '../components/CardPreview';
+import FormSection from './FormSection';
+import CardPreview from './CardPreview';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../components/auth/AuthContext';
-import '../components/css/global.css';
+import { useAuth } from '../auth/AuthContext';
+import '../../styles/global.css';
  function FarmerCardGenerator(){
  const [formData, setFormData] = useState({
     id: '',

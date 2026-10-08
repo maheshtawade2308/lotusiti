@@ -1,9 +1,9 @@
 import React from 'react';
-import '../css/kamgarId.css';
+import '../../styles/kamgarId.css';
 import leftLogo from '../../assets/mbocw-logo-left1.png';
 import rightLogo from '../../assets/bocw_logo_right.png';
 import watermark from '../../assets/kamgaridbg.png';
-import QRCodeGenerator from "../utils/QRCodeGeneratorKid";
+import QRCodeGenerator from "../../utils/QRCodeGeneratorKid";
 
 const GenerateKamgarId = ({ details }) => {
   const { photo } = details;

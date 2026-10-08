@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/global.css';
+import '../../styles/global.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // ─── Constants ────────────────────────────────────────────────────────────────

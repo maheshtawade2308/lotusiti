@@ -1,19 +1,19 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './components/css/global.css';
+import './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import FarmerCardGenerator from './components/FarmerCardGenerator';
+import LoginPage from './components/auth/LoginPage';
+import FarmerCardGenerator from './components/FarmerID/FarmerCardGenerator';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import KamgarForm from './components/KamgarID/KamgarForm';
-import Navbar from './components/pages/Navbar';
+import Navbar from './components/layout/Navbar';
 import Dashboard from './components/pages/Dashboard';
-import RegisterUser from './components/supabase/RegisterUser';
-import UserList from './components/supabase/UserList';
-import Footer from './components/pages/Footer';
+import RegisterUser from './components/admin/RegisterUser';
+import UserList from './components/admin/UserList';
+import Footer from './components/layout/Footer';
 import AdjustMahaID from './components/MahaID/AdjustMahaID';
-import Transactions from './components/supabase/Transactions';
+import Transactions from './components/admin/Transactions';
 import { AuthProvider } from './components/auth/AuthContext';
 
 

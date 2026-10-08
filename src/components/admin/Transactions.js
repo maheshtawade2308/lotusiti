@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { supabase } from '../supabase/supabaseClient';
+import { supabase } from '../../services/supabaseClient';
 import { useAuth } from '../auth/AuthContext';
-import '../css/global.css';
+import '../../styles/global.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PAGE_SIZE = 10;

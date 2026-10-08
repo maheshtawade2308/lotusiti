@@ -1,7 +1,7 @@
 import React from "react";
-import "../components/css/FarmerIdCard.css";
-import IdCardFront from "../components/IdCardFront";
-import IdCardBack from "../components/IdCardBack";
+import "../../styles/FarmerIdCard.css";
+import IdCardFront from "./IdCardFront";
+import IdCardBack from "./IdCardBack";
 
 function FarmerIdCard({ formData, landRecords }) {
   return (

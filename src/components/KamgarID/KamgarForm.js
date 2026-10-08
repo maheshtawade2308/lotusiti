@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import '../css/kamgarId.css';
-import '../css/global.css';
+import '../../styles/kamgarId.css';
+import '../../styles/global.css';
 import { Link } from 'react-router-dom';
 import GenerateKamgarId from './GenerateKamgarId';
-import { downloadFrontSide } from '../utils/generateJPGBothSides';
+import { downloadFrontSide } from '../../utils/generateJPGBothSides';
 import { useAuth } from '../auth/AuthContext';
 import { toast } from 'react-toastify';
 import backSideImg from '../../assets/back side.png';

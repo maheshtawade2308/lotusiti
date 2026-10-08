@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../css/global.css";
+import "../../styles/global.css";
 import { useAuth } from "../auth/AuthContext";
 
 const Navbar = () => {

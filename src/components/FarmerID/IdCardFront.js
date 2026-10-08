@@ -1,10 +1,10 @@
-// components/IdCardFront.js
+// components/FarmerID/IdCardFront.js
 import React from "react";
-import QRCodeGenerator from "../components/utils/QRCodeGenerator";
-import logo from "../assets/logo.png";
-import farmerIcon from "../assets/farmer.png";
-import leaves from "../assets/leaves.png";
-import watermark from "../assets/watermark.png";
+import QRCodeGenerator from "../../utils/QRCodeGenerator";
+import logo from "../../assets/logo.png";
+import farmerIcon from "../../assets/farmer.png";
+import leaves from "../../assets/leaves.png";
+import watermark from "../../assets/watermark.png";
 
 function IdCardFront({ formData }) {
   const { name_mr, name_en, dob, gender, mobile, aadhaar, id, photo } = formData;
