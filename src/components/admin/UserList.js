@@ -159,7 +159,18 @@ export default function UserList() {
       <div className="container mt-4">
 
         <div className="d-flex justify-content-between align-items-center">
-          <h2>👥 Registered Users</h2>
+          <div className="d-flex align-items-center gap-3">
+            <h2 className="mb-0">👥 Registered Users</h2>
+            <span
+              className="badge rounded-pill bg-primary fs-6 px-3 py-2 shadow-sm"
+              style={{ fontWeight: "600", letterSpacing: "0.5px" }}
+              title={search ? "Filtered / Total users" : "Total registered users"}
+            >
+              {search
+                ? `Showing ${sortedUsers.length} of ${users.length}`
+                : `Total Users: ${users.length}`}
+            </span>
+          </div>
 
           <div className="d-flex gap-2">
             <button className="btn btn-primary" onClick={() => setShowAddUser(true)}>
