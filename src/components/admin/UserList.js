@@ -18,9 +18,6 @@ export default function UserList() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const [page, setPage] = useState(1);
-  const pageSize = 5;
-
   const [editUser,     setEditUser]     = useState(null);
   const [showAddUser,  setShowAddUser]  = useState(false);
   const [lastLoginSort, setLastLoginSort] = useState('none'); // 'none' | 'asc' | 'desc'
@@ -109,10 +106,6 @@ export default function UserList() {
     return lastLoginSort === 'asc' ? ta - tb : tb - ta;
   });
 
-  const start = (page - 1) * pageSize;
-  const paginatedUsers = sortedUsers.slice(start, start + pageSize);
-  const totalPages = Math.ceil(sortedUsers.length / pageSize);
-
   // ---------------- EXPORT TO EXCEL -------------------
   const exportExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(users);
@@ -187,159 +180,137 @@ export default function UserList() {
           className="form-control mt-3 mb-3"
           placeholder="Search by name, email, mobile..."
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
         {loading ? (
           <p>Loading...</p>
         ) : (
           <>
-            <table className="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Mobile</th>
-                  <th>Center Name</th>
-                  <th>Balance</th>
-                  <th style={{ whiteSpace: 'nowrap' }}>
-                    <div className="d-flex align-items-center gap-2">
-                      <span>Last Logged On</span>
-                      <button
-                        title={lastLoginSort === 'none' ? 'Sort' : lastLoginSort === 'desc' ? 'Newest first' : 'Oldest first'}
-                        onClick={() => {
-                          setLastLoginSort(s => s === 'none' ? 'desc' : s === 'desc' ? 'asc' : 'none');
-                          setPage(1);
-                        }}
-                        style={{
-                          width: 20, height: 20,
-                          padding: 0, border: '1px solid #cbd5e1',
-                          borderRadius: 4, background: lastLoginSort !== 'none' ? '#4f46e5' : '#f8fafc',
-                          color: lastLoginSort !== 'none' ? '#fff' : '#64748b',
-                          fontSize: 11, lineHeight: 1,
-                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                          cursor: 'pointer', flexShrink: 0,
-                          transition: 'all 0.15s',
-                        }}
-                      >
-                        {lastLoginSort === 'desc' ? '↓' : lastLoginSort === 'asc' ? '↑' : '↕'}
-                      </button>
-                    </div>
-                  </th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {paginatedUsers.map((u) => (
-                  <tr key={u.id}>
-                    <td>{u.name}</td>
-                    <td>{u.email}</td>
-                    <td>{u.mobile}</td>
-                    <td>{u.center_name || "-"}</td>
-                    <td>{u.balance_points || 0}</td>
-                    <td>{u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString() : "Never"}</td>
-
-                    <td>
-                      <div className="d-flex align-items-center gap-1" style={{ flexWrap: 'nowrap' }}>
-                        {/* Edit */}
+            <div
+              className="table-responsive shadow-sm rounded border"
+              style={{ maxHeight: "65vh", overflowY: "auto", overflowX: "auto" }}
+            >
+              <table className="table table-bordered table-striped table-hover mb-0">
+                <thead className="table-light" style={{ position: "sticky", top: 0, zIndex: 2 }}>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Center Name</th>
+                    <th>Balance</th>
+                    <th style={{ whiteSpace: 'nowrap' }}>
+                      <div className="d-flex align-items-center gap-2">
+                        <span>Last Logged On</span>
                         <button
-                          title="Edit User"
-                          onClick={() => setEditUser(u)}
-                          style={{
-                            width: 32, height: 32, border: 'none', borderRadius: 8,
-                            background: '#eff6ff', color: '#2563eb',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
-                            flexShrink: 0,
+                          title={lastLoginSort === 'none' ? 'Sort' : lastLoginSort === 'desc' ? 'Newest first' : 'Oldest first'}
+                          onClick={() => {
+                            setLastLoginSort(s => s === 'none' ? 'desc' : s === 'desc' ? 'asc' : 'none');
                           }}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.color = '#fff'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.color = '#2563eb'; }}
-                        >
-                          ✏️
-                        </button>
-
-                        {/* WhatsApp */}
-                        <button
-                          title="Send WhatsApp"
-                          onClick={() => sendWhatsApp(u.mobile)}
                           style={{
-                            width: 32, height: 32, border: 'none', borderRadius: 8,
-                            background: '#f0fdf4', color: '#16a34a',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
-                            flexShrink: 0,
+                            width: 20, height: 20,
+                            padding: 0, border: '1px solid #cbd5e1',
+                            borderRadius: 4, background: lastLoginSort !== 'none' ? '#4f46e5' : '#f8fafc',
+                            color: lastLoginSort !== 'none' ? '#fff' : '#64748b',
+                            fontSize: 11, lineHeight: 1,
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', flexShrink: 0,
+                            transition: 'all 0.15s',
                           }}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#16a34a'; e.currentTarget.style.color = '#fff'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#f0fdf4'; e.currentTarget.style.color = '#16a34a'; }}
                         >
-                          <FaWhatsapp size={17} />
-                        </button>
-
-                        {/* Transactions */}
-                        <button
-                          title="View Transactions"
-                          onClick={() => navigate(`/transactions?userId=${u.id}&userName=${encodeURIComponent(u.name)}`)}
-                          style={{
-                            width: 32, height: 32, border: 'none', borderRadius: 8,
-                            background: '#ecfeff', color: '#0891b2',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
-                            flexShrink: 0,
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#0891b2'; e.currentTarget.style.color = '#fff'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#ecfeff'; e.currentTarget.style.color = '#0891b2'; }}
-                        >
-                          💳
-                        </button>
-
-                        {/* Delete */}
-                        <button
-                          title="Delete User"
-                          onClick={() => deleteUser(u.id)}
-                          style={{
-                            width: 32, height: 32, border: 'none', borderRadius: 8,
-                            background: '#fef2f2', color: '#dc2626',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
-                            flexShrink: 0,
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.color = '#fff'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.color = '#dc2626'; }}
-                        >
-                          🗑️
+                          {lastLoginSort === 'desc' ? '↓' : lastLoginSort === 'asc' ? '↑' : '↕'}
                         </button>
                       </div>
-                    </td>
+                    </th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
 
-            {/* Pagination */}
-            <div className="d-flex justify-content-between">
-              <button
-                className="btn btn-secondary"
-                disabled={page <= 1}
-                onClick={() => setPage(page - 1)}
-              >
-                ⬅ Previous
-              </button>
+                <tbody>
+                  {sortedUsers.map((u) => (
+                    <tr key={u.id}>
+                      <td>{u.name}</td>
+                      <td>{u.email}</td>
+                      <td>{u.mobile}</td>
+                      <td>{u.center_name || "-"}</td>
+                      <td>{u.balance_points || 0}</td>
+                      <td>{u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString() : "Never"}</td>
 
-              <span className="fw-bold">
-                Page {page} of {totalPages}
-              </span>
+                      <td>
+                        <div className="d-flex align-items-center gap-1" style={{ flexWrap: 'nowrap' }}>
+                          {/* Edit */}
+                          <button
+                            title="Edit User"
+                            onClick={() => setEditUser(u)}
+                            style={{
+                              width: 32, height: 32, border: 'none', borderRadius: 8,
+                              background: '#eff6ff', color: '#2563eb',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
+                              flexShrink: 0,
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.color = '#fff'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.color = '#2563eb'; }}
+                          >
+                            ✏️
+                          </button>
 
-              <button
-                className="btn btn-secondary"
-                disabled={page >= totalPages}
-                onClick={() => setPage(page + 1)}
-              >
-                Next ➡
-              </button>
+                          {/* WhatsApp */}
+                          <button
+                            title="Send WhatsApp"
+                            onClick={() => sendWhatsApp(u.mobile)}
+                            style={{
+                              width: 32, height: 32, border: 'none', borderRadius: 8,
+                              background: '#f0fdf4', color: '#16a34a',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
+                              flexShrink: 0,
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#16a34a'; e.currentTarget.style.color = '#fff'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#f0fdf4'; e.currentTarget.style.color = '#16a34a'; }}
+                          >
+                            <FaWhatsapp size={17} />
+                          </button>
+
+                          {/* Transactions */}
+                          <button
+                            title="View Transactions"
+                            onClick={() => navigate(`/transactions?userId=${u.id}&userName=${encodeURIComponent(u.name)}`)}
+                            style={{
+                              width: 32, height: 32, border: 'none', borderRadius: 8,
+                              background: '#ecfeff', color: '#0891b2',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
+                              flexShrink: 0,
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#0891b2'; e.currentTarget.style.color = '#fff'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#ecfeff'; e.currentTarget.style.color = '#0891b2'; }}
+                          >
+                            💳
+                          </button>
+
+                          {/* Delete */}
+                          <button
+                            title="Delete User"
+                            onClick={() => deleteUser(u.id)}
+                            style={{
+                              width: 32, height: 32, border: 'none', borderRadius: 8,
+                              background: '#fef2f2', color: '#dc2626',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
+                              flexShrink: 0,
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.color = '#fff'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.color = '#dc2626'; }}
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </>
         )}
