@@ -40,18 +40,43 @@ export default function UserList() {
     setLoading(false);
   }
 
-  const deleteUser = async (id) => {
-    if (!window.confirm("Delete this user? This will permanently remove the user from all records.")) return;
+  // Soft Delete: Toggle Block / Unblock user
+  const toggleBlockUser = async (user) => {
+    const newStatus = !user.is_blocked;
+    const actionText = newStatus ? "Block (Soft delete)" : "Unblock";
+
+    if (!window.confirm(`Are you sure you want to ${actionText} user "${user.name}"?`)) return;
+
+    const { data, error } = await supabase.rpc("toggle_user_blocked", {
+      p_user_id: user.id,
+      p_blocked: newStatus
+    });
+
+    if (error || !data?.success) {
+      console.error("Block toggle failed:", error || data?.error);
+      alert("Failed to update user status: " + (error?.message || data?.error));
+      return;
+    }
+
+    setUsers(users.map((u) => u.id === user.id ? { ...u, is_blocked: newStatus } : u));
+  };
+
+  // Permanent Delete: Cascades from auth.users (located inside Edit Modal)
+  const permanentDeleteUser = async (id, name) => {
+    if (!window.confirm(`⚠️ PERMANENT DELETE WARNING: This will permanently erase "${name}" and all associated data from the database. This action CANNOT be undone. Are you absolutely sure?`)) {
+      return;
+    }
 
     const { error } = await supabase.rpc("delete_user_by_id", { user_id: id });
 
     if (error) {
       console.error("Delete failed:", error.message);
-      alert("Failed to delete user: " + error.message);
+      alert("Failed to permanently delete user: " + error.message);
       return;
     }
 
     setUsers(users.filter((u) => u.id !== id));
+    setEditUser(null);
   };
 
   const updateUser = async () => {
@@ -200,6 +225,7 @@ export default function UserList() {
                     <th>Mobile</th>
                     <th>Center Name</th>
                     <th>Balance</th>
+                    <th className="text-center">Status</th>
                     <th style={{ whiteSpace: 'nowrap' }}>
                       <div className="d-flex align-items-center gap-2">
                         <span>Last Logged On</span>
@@ -229,12 +255,28 @@ export default function UserList() {
 
                 <tbody>
                   {sortedUsers.map((u) => (
-                    <tr key={u.id}>
-                      <td>{u.name}</td>
+                    <tr key={u.id} className={u.is_blocked ? "table-danger text-muted" : ""}>
+                      <td>
+                        <span className="fw-semibold">{u.name}</span>
+                        {u.is_blocked && (
+                          <span className="badge bg-danger ms-2" style={{ fontSize: '0.68rem' }}>Blocked</span>
+                        )}
+                      </td>
                       <td>{u.email}</td>
                       <td>{u.mobile}</td>
                       <td>{u.center_name || "-"}</td>
                       <td>{u.balance_points || 0}</td>
+                      <td className="text-center">
+                        {u.is_blocked ? (
+                          <span className="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle">
+                            🚫 Blocked
+                          </span>
+                        ) : (
+                          <span className="badge rounded-pill bg-success-subtle text-success border border-success-subtle">
+                            ✓ Active
+                          </span>
+                        )}
+                      </td>
                       <td>{u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString() : "Never"}</td>
 
                       <td>
@@ -254,6 +296,30 @@ export default function UserList() {
                             onMouseLeave={e => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.color = '#2563eb'; }}
                           >
                             ✏️
+                          </button>
+
+                          {/* Block / Unblock (Soft Delete) */}
+                          <button
+                            title={u.is_blocked ? "Unblock User" : "Block User (Soft Delete)"}
+                            onClick={() => toggleBlockUser(u)}
+                            style={{
+                              width: 32, height: 32, border: 'none', borderRadius: 8,
+                              background: u.is_blocked ? '#fef3c7' : '#fee2e2',
+                              color: u.is_blocked ? '#d97706' : '#dc2626',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              cursor: 'pointer', fontSize: 14, transition: 'all 0.15s',
+                              flexShrink: 0,
+                            }}
+                            onMouseEnter={e => {
+                              e.currentTarget.style.background = u.is_blocked ? '#d97706' : '#dc2626';
+                              e.currentTarget.style.color = '#fff';
+                            }}
+                            onMouseLeave={e => {
+                              e.currentTarget.style.background = u.is_blocked ? '#fef3c7' : '#fee2e2';
+                              e.currentTarget.style.color = u.is_blocked ? '#d97706' : '#dc2626';
+                            }}
+                          >
+                            {u.is_blocked ? "🔓" : "🚫"}
                           </button>
 
                           {/* WhatsApp */}
@@ -289,23 +355,6 @@ export default function UserList() {
                           >
                             💳
                           </button>
-
-                          {/* Delete */}
-                          <button
-                            title="Delete User"
-                            onClick={() => deleteUser(u.id)}
-                            style={{
-                              width: 32, height: 32, border: 'none', borderRadius: 8,
-                              background: '#fef2f2', color: '#dc2626',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              cursor: 'pointer', fontSize: 15, transition: 'all 0.15s',
-                              flexShrink: 0,
-                            }}
-                            onMouseEnter={e => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.color = '#fff'; }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.color = '#dc2626'; }}
-                          >
-                            🗑️
-                          </button>
                         </div>
                       </td>
                     </tr>
@@ -331,6 +380,13 @@ export default function UserList() {
                 </div>
 
                 <div className="modal-body">
+                  {editUser.is_blocked && (
+                    <div className="alert alert-warning py-2 mb-3 d-flex align-items-center gap-2">
+                      <span>⚠️</span>
+                      <small><strong>Account is Blocked.</strong> The user cannot log in or generate ID cards.</small>
+                    </div>
+                  )}
+
                   <label className="form-label fw-bold">Name</label>
                   <input
                     className="form-control mb-2"
@@ -379,16 +435,28 @@ export default function UserList() {
                   </div>
                 </div>
 
-                <div className="modal-footer">
+                <div className="modal-footer d-flex justify-content-between">
+                  {/* Permanently Delete Option inside Edit Modal */}
                   <button
-                    className="btn btn-secondary"
-                    onClick={() => setEditUser(null)}
+                    type="button"
+                    className="btn btn-outline-danger btn-sm d-flex align-items-center gap-1"
+                    onClick={() => permanentDeleteUser(editUser.id, editUser.name)}
+                    title="Permanently remove user from auth and database records"
                   >
-                    Cancel
+                    🗑️ Permanently Delete
                   </button>
-                  <button className="btn btn-primary" onClick={updateUser}>
-                    Save
-                  </button>
+
+                  <div className="d-flex gap-2">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => setEditUser(null)}
+                    >
+                      Cancel
+                    </button>
+                    <button className="btn btn-primary" onClick={updateUser}>
+                      Save
+                    </button>
+                  </div>
                 </div>
 
               </div>

@@ -20,7 +20,9 @@ function LoginPage() {
       navigate("/dashboard");
     } catch (err) {
       console.error("Supabase error:", err.message);
-      if (err.message.includes("Invalid login credentials")) {
+      if (err.message.includes("ACCOUNT_BLOCKED")) {
+        toast.error("तुमचे खाते ब्लॉक केले आहे. कृपया प्रशासकाशी संपर्क साधा.");
+      } else if (err.message.includes("Invalid login credentials")) {
         toast.error("चुकीचा ईमेल किंवा पासवर्ड");
       } else {
         toast.error("Login failed. Please try again.");

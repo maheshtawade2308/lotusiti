@@ -88,6 +88,21 @@ export const AuthProvider = ({ children }) => {
     });
 
     if (error) throw error;
+
+    // Check if user is blocked (Soft delete)
+    if (data?.user) {
+      const { data: userProf } = await supabase
+        .from("profiles")
+        .select("is_blocked")
+        .eq("id", data.user.id)
+        .single();
+
+      if (userProf?.is_blocked) {
+        await supabase.auth.signOut();
+        throw new Error("ACCOUNT_BLOCKED: तुमचे खाते ब्लॉक केले आहे. कृपया प्रशासकाशी संपर्क साधा.");
+      }
+    }
+
     return data;
   };
 
