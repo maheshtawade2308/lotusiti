@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../services/supabaseClient";
 import RegisterUser from "./RegisterUser";
+import EditUserModal from "./EditUserModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -59,48 +60,6 @@ export default function UserList() {
     }
 
     setUsers(users.map((u) => u.id === user.id ? { ...u, is_blocked: newStatus } : u));
-  };
-
-  // Permanent Delete: Cascades from auth.users (located inside Edit Modal)
-  const permanentDeleteUser = async (id, name) => {
-    if (!window.confirm(`⚠️ PERMANENT DELETE WARNING: This will permanently erase "${name}" and all associated data from the database. This action CANNOT be undone. Are you absolutely sure?`)) {
-      return;
-    }
-
-    const { error } = await supabase.rpc("delete_user_by_id", { user_id: id });
-
-    if (error) {
-      console.error("Delete failed:", error.message);
-      alert("Failed to permanently delete user: " + error.message);
-      return;
-    }
-
-    setUsers(users.filter((u) => u.id !== id));
-    setEditUser(null);
-  };
-
-  const updateUser = async () => {
-    const { id, name, mobile, address, balance_points, center_name } = editUser;
-    const newBalance = parseInt(balance_points) || 0;
-
-    // Save profile changes and record transaction atomically in PostgreSQL
-    const { data, error } = await supabase.rpc("admin_update_profile", {
-      p_user_id: id,
-      p_name: name,
-      p_mobile: mobile,
-      p_address: address,
-      p_center_name: center_name,
-      p_new_balance: newBalance
-    });
-
-    if (error || !data?.success) {
-      console.error("Error updating user:", error || data?.error);
-      alert("Error updating user: " + (error?.message || data?.error));
-      return;
-    }
-
-    setEditUser(null);
-    fetchUsers();
   };
 
   const filteredUsers = users.filter(
@@ -365,103 +324,20 @@ export default function UserList() {
           </>
         )}
 
-        {/* EDIT MODAL */}
+        {/* EDIT USER MODAL */}
         {editUser && (
-          <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content">
-
-                <div className="modal-header">
-                  <h5>Edit User</h5>
-                  <button
-                    className="btn-close"
-                    onClick={() => setEditUser(null)}
-                  ></button>
-                </div>
-
-                <div className="modal-body">
-                  {editUser.is_blocked && (
-                    <div className="alert alert-warning py-2 mb-3 d-flex align-items-center gap-2">
-                      <span>⚠️</span>
-                      <small><strong>Account is Blocked.</strong> The user cannot log in or generate ID cards.</small>
-                    </div>
-                  )}
-
-                  <label className="form-label fw-bold">Name</label>
-                  <input
-                    className="form-control mb-2"
-                    value={editUser.name}
-                    onChange={(e) =>
-                      setEditUser({ ...editUser, name: e.target.value })
-                    }
-                  />
-                  <label className="form-label fw-bold">Mobile</label>
-                  <input
-                    className="form-control mb-2"
-                    value={editUser.mobile}
-                    onChange={(e) =>
-                      setEditUser({ ...editUser, mobile: e.target.value })
-                    }
-                  />
-                  <label className="form-label fw-bold">Address</label>
-                  <textarea
-                    className="form-control mb-2"
-                    value={editUser.address}
-                    onChange={(e) =>
-                      setEditUser({ ...editUser, address: e.target.value })
-                    }
-                  />
-                  <div className="input-group mb-2">
-                    <span className="input-group-text">Center Name</span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={editUser.center_name || ""}
-                      onChange={(e) =>
-                        setEditUser({ ...editUser, center_name: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="input-group mb-2">
-                    <span className="input-group-text">Balance Points</span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={editUser.balance_points || 0}
-                      onChange={(e) =>
-                        setEditUser({ ...editUser, balance_points: parseInt(e.target.value) || 0 })
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="modal-footer d-flex justify-content-between">
-                  {/* Permanently Delete Option inside Edit Modal */}
-                  <button
-                    type="button"
-                    className="btn btn-outline-danger btn-sm d-flex align-items-center gap-1"
-                    onClick={() => permanentDeleteUser(editUser.id, editUser.name)}
-                    title="Permanently remove user from auth and database records"
-                  >
-                    🗑️ Permanently Delete
-                  </button>
-
-                  <div className="d-flex gap-2">
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => setEditUser(null)}
-                    >
-                      Cancel
-                    </button>
-                    <button className="btn btn-primary" onClick={updateUser}>
-                      Save
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
+          <EditUserModal
+            user={editUser}
+            onClose={() => setEditUser(null)}
+            onSaved={() => {
+              setEditUser(null);
+              fetchUsers();
+            }}
+            onDeleted={(deletedId) => {
+              setUsers(users.filter((u) => u.id !== deletedId));
+              setEditUser(null);
+            }}
+          />
         )}
 
         {/* ADD USER MODAL — reuses RegisterUser component */}

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '../../services/supabaseClient';
 import { useAuth } from '../auth/AuthContext';
+import EditUserModal from './EditUserModal';
 import '../../styles/global.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -31,7 +32,6 @@ const Transactions = () => {
   // Admin-only: User details modal state
   const [selectedUser,   setSelectedUser]   = useState(null);
   const [modalLoading,   setModalLoading]   = useState(false);
-  const [savingUser,     setSavingUser]     = useState(false);
 
   const openUserDetails = async (userId) => {
     if (!userId) return;
@@ -50,35 +50,6 @@ const Transactions = () => {
       alert('Failed to load user details');
     }
     setModalLoading(false);
-  };
-
-  const updateSelectedUser = async () => {
-    if (!selectedUser) return;
-    setSavingUser(true);
-    const { id, name, mobile, address, balance_points, center_name } = selectedUser;
-    const newBalance = parseInt(balance_points) || 0;
-
-    // Use atomic stored procedure to update profile & balance with transaction record
-    const { data, error } = await supabase.rpc('admin_update_profile', {
-      p_user_id: id,
-      p_name: name,
-      p_mobile: mobile,
-      p_address: address,
-      p_center_name: center_name,
-      p_new_balance: newBalance
-    });
-
-    if (error || !data?.success) {
-      console.error('Error updating user:', error || data?.error);
-      alert('Error updating user: ' + (error?.message || data?.error));
-      setSavingUser(false);
-      return;
-    }
-
-    // Refresh transactions table so any logged balance transaction reflects immediately
-    fetchTransactions();
-    setSavingUser(false);
-    setSelectedUser(null);
   };
 
   // ── Fetch all users for admin name-filter dropdown ─────────────────────────
@@ -425,7 +396,7 @@ const Transactions = () => {
             </div>
           </div>
         )}
-        {/* ── User Details Modal ── */}
+        {/* ── User Details Modal (Shared EditUserModal) ── */}
         {modalLoading && (
           <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
             <div className="modal-dialog modal-dialog-centered">
@@ -438,103 +409,18 @@ const Transactions = () => {
         )}
 
         {selectedUser && (
-          <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Edit User Details</h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setSelectedUser(null)}
-                  />
-                </div>
-
-                <div className="modal-body">
-                  <label className="form-label fw-bold">Name</label>
-                  <input
-                    className="form-control mb-2"
-                    value={selectedUser.name || ""}
-                    onChange={(e) =>
-                      setSelectedUser({ ...selectedUser, name: e.target.value })
-                    }
-                  />
-
-                  <label className="form-label fw-bold">Email</label>
-                  <input
-                    type="email"
-                    disabled
-                    className="form-control mb-2 bg-light text-muted"
-                    value={selectedUser.email || ""}
-                  />
-
-                  <label className="form-label fw-bold">Mobile</label>
-                  <input
-                    className="form-control mb-2"
-                    value={selectedUser.mobile || ""}
-                    onChange={(e) =>
-                      setSelectedUser({ ...selectedUser, mobile: e.target.value })
-                    }
-                  />
-
-                  <label className="form-label fw-bold">Address</label>
-                  <textarea
-                    className="form-control mb-2"
-                    value={selectedUser.address || ""}
-                    onChange={(e) =>
-                      setSelectedUser({ ...selectedUser, address: e.target.value })
-                    }
-                  />
-
-                  <div className="input-group mb-2">
-                    <span className="input-group-text">Center Name</span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={selectedUser.center_name || ""}
-                      onChange={(e) =>
-                        setSelectedUser({ ...selectedUser, center_name: e.target.value })
-                      }
-                    />
-                  </div>
-
-                  <div className="input-group mb-2">
-                    <span className="input-group-text">Balance Points</span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={selectedUser.balance_points || 0}
-                      onChange={(e) =>
-                        setSelectedUser({
-                          ...selectedUser,
-                          balance_points: parseInt(e.target.value) || 0,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={() => setSelectedUser(null)}
-                    disabled={savingUser}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={updateSelectedUser}
-                    disabled={savingUser}
-                  >
-                    {savingUser ? "Saving..." : "Save"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <EditUserModal
+            user={selectedUser}
+            onClose={() => setSelectedUser(null)}
+            onSaved={() => {
+              setSelectedUser(null);
+              fetchTransactions();
+            }}
+            onDeleted={() => {
+              setSelectedUser(null);
+              fetchTransactions();
+            }}
+          />
         )}
       </div>
     </div>
