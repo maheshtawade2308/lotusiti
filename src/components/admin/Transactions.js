@@ -28,6 +28,76 @@ const Transactions = () => {
   const [userNameFilter, setUserNameFilter] = useState(paramUserName);
   const [allUsers,       setAllUsers]       = useState([]); // for admin dropdown
 
+  // Admin-only: User details modal state
+  const [selectedUser,   setSelectedUser]   = useState(null);
+  const [modalLoading,   setModalLoading]   = useState(false);
+  const [savingUser,     setSavingUser]     = useState(false);
+
+  const openUserDetails = async (userId) => {
+    if (!userId) return;
+    setModalLoading(true);
+    setSelectedUser(null);
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (!error && data) {
+      setSelectedUser(data);
+    } else {
+      console.error('Failed to load user details:', error);
+      alert('Failed to load user details');
+    }
+    setModalLoading(false);
+  };
+
+  const updateSelectedUser = async () => {
+    if (!selectedUser) return;
+    setSavingUser(true);
+    const { id, name, mobile, address, gender, balance_points, center_name } = selectedUser;
+
+    // Fetch previous balance to log transaction if balance changed
+    const { data: previousData } = await supabase
+      .from('profiles')
+      .select('balance_points')
+      .eq('id', id)
+      .single();
+
+    const oldBalance = previousData?.balance_points ?? 0;
+    const newBalance = parseInt(balance_points) || 0;
+    const diff = newBalance - oldBalance;
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ name, mobile, address, gender, balance_points: newBalance, center_name })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating user:', error);
+      alert('Error updating user: ' + error.message);
+      setSavingUser(false);
+      return;
+    }
+
+    if (diff !== 0) {
+      await supabase.from('transactions').insert({
+        user_id: id,
+        type: diff > 0 ? 'credit' : 'debit',
+        amount: Math.abs(diff),
+        balance_after: newBalance,
+        description: diff > 0
+          ? `Credited by admin (+${diff} Rs)`
+          : `Debited by admin (${diff} Rs)`,
+      });
+      // Refresh transactions table so balance changes reflect immediately
+      fetchTransactions();
+    }
+
+    setSavingUser(false);
+    setSelectedUser(null);
+  };
+
   // ── Fetch all users for admin name-filter dropdown ─────────────────────────
   useEffect(() => {
     if (!isAdmin) return;
@@ -308,9 +378,21 @@ const Transactions = () => {
                     </td>
                     {isAdmin && (
                       <td>
-                        <span className="badge bg-light text-dark border fw-normal">
-                          👤 {row.profiles?.name ?? '—'}
-                        </span>
+                        {row.user_id ? (
+                          <button
+                            type="button"
+                            onClick={() => openUserDetails(row.user_id)}
+                            className="badge bg-light text-primary border fw-normal text-decoration-none btn p-1 px-2"
+                            style={{ cursor: 'pointer', transition: 'all 0.15s' }}
+                            title="Click to view and edit user details"
+                          >
+                            👤 {row.profiles?.name ?? '—'}
+                          </button>
+                        ) : (
+                          <span className="badge bg-light text-dark border fw-normal">
+                            👤 {row.profiles?.name ?? '—'}
+                          </span>
+                        )}
                       </td>
                     )}
                   </tr>
@@ -357,6 +439,117 @@ const Transactions = () => {
                 disabled={page === totalPages}
                 onClick={() => setPage(p => p + 1)}
               >Next ›</button>
+            </div>
+          </div>
+        )}
+        {/* ── User Details Modal ── */}
+        {modalLoading && (
+          <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content text-center py-4">
+                <div className="spinner-border text-primary mx-auto mb-2" role="status" />
+                <p className="mb-0 text-muted">Loading user details...</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {selectedUser && (
+          <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Edit User Details</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setSelectedUser(null)}
+                  />
+                </div>
+
+                <div className="modal-body">
+                  <label className="form-label fw-bold">Name</label>
+                  <input
+                    className="form-control mb-2"
+                    value={selectedUser.name || ""}
+                    onChange={(e) =>
+                      setSelectedUser({ ...selectedUser, name: e.target.value })
+                    }
+                  />
+
+                  <label className="form-label fw-bold">Email</label>
+                  <input
+                    type="email"
+                    disabled
+                    className="form-control mb-2 bg-light text-muted"
+                    value={selectedUser.email || ""}
+                  />
+
+                  <label className="form-label fw-bold">Mobile</label>
+                  <input
+                    className="form-control mb-2"
+                    value={selectedUser.mobile || ""}
+                    onChange={(e) =>
+                      setSelectedUser({ ...selectedUser, mobile: e.target.value })
+                    }
+                  />
+
+                  <label className="form-label fw-bold">Address</label>
+                  <textarea
+                    className="form-control mb-2"
+                    value={selectedUser.address || ""}
+                    onChange={(e) =>
+                      setSelectedUser({ ...selectedUser, address: e.target.value })
+                    }
+                  />
+
+                  <div className="input-group mb-2">
+                    <span className="input-group-text">Center Name</span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={selectedUser.center_name || ""}
+                      onChange={(e) =>
+                        setSelectedUser({ ...selectedUser, center_name: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className="input-group mb-2">
+                    <span className="input-group-text">Balance Points</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={selectedUser.balance_points || 0}
+                      onChange={(e) =>
+                        setSelectedUser({
+                          ...selectedUser,
+                          balance_points: parseInt(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setSelectedUser(null)}
+                    disabled={savingUser}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={updateSelectedUser}
+                    disabled={savingUser}
+                  >
+                    {savingUser ? "Saving..." : "Save"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

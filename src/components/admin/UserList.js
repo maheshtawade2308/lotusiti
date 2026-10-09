@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../services/supabaseClient";
 import RegisterUser from "./RegisterUser";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 
 // Excel export
@@ -14,8 +14,11 @@ import autoTable from "jspdf-autotable";
 
 export default function UserList() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const paramSearch = searchParams.get("search") || "";
+
   const [users, setUsers] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(paramSearch);
   const [loading, setLoading] = useState(true);
 
   const [editUser,     setEditUser]     = useState(null);
