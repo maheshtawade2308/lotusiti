@@ -28,40 +28,81 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  // ------------------------------
+  // ------------------------------------------------
   // 20 Minutes Inactivity Session Timeout
-  // ------------------------------
+  // Uses localStorage timestamp to ensure accuracy across tabs,
+  // tab switching, computer sleep, and background states.
+  // ------------------------------------------------
   useEffect(() => {
     if (!user) return;
 
-    const SESSION_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutes
-    let timeoutId;
+    const INACTIVITY_LIMIT_MS = 20 * 60 * 1000; // 20 minutes
+    const STORAGE_KEY = "lotusiti_last_activity";
 
-    const handleSessionTimeout = async () => {
-      alert("तुमचे सत्र (Session) २० मिनिटांच्या निष्क्रियतेमुळे संपले आहे. कृपया पुन्हा लॉगिन करा.");
-      await logout();
-      window.location.href = "/";
+    // Mark activity now
+    const recordActivity = () => {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
     };
 
-    const resetTimer = () => {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleSessionTimeout, SESSION_TIMEOUT_MS);
+    recordActivity();
+
+    // Check if session has timed out
+    const checkInactivity = async () => {
+      const lastActivity = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+      const elapsed = Date.now() - lastActivity;
+
+      if (elapsed >= INACTIVITY_LIMIT_MS) {
+        clearInterval(intervalId);
+        removeActivityListeners();
+        localStorage.removeItem(STORAGE_KEY);
+
+        alert("तुमचे सत्र (Session) २० मिनिटांच्या निष्क्रियतेमुळे संपले आहे. कृपया पुन्हा लॉगिन करा.");
+        await logout();
+        window.location.href = "/";
+      }
     };
 
-    // User activity events to reset timeout timer
+    // Throttle activity recorder so mousemove doesn't spam localStorage
+    let lastRecorded = 0;
+    const handleUserActivity = () => {
+      const now = Date.now();
+      if (now - lastRecorded > 3000) { // update at most every 3 seconds
+        lastRecorded = now;
+        recordActivity();
+      }
+    };
+
+    // Activity events
     const activityEvents = ["mousemove", "mousedown", "keydown", "touchstart", "scroll", "click"];
-    activityEvents.forEach((event) => {
-      window.addEventListener(event, resetTimer);
-    });
+    const addActivityListeners = () => {
+      activityEvents.forEach((event) => {
+        window.addEventListener(event, handleUserActivity, { passive: true });
+      });
+      // Also listen to visibility change (when tab becomes active again after being idle)
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+    };
 
-    // Start timer initially
-    resetTimer();
+    const removeActivityListeners = () => {
+      activityEvents.forEach((event) => {
+        window.removeEventListener(event, handleUserActivity);
+      });
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        checkInactivity();
+      }
+    };
+
+    addActivityListeners();
+
+    // Periodic check every 10 seconds
+    const intervalId = setInterval(checkInactivity, 10000);
 
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-      activityEvents.forEach((event) => {
-        window.removeEventListener(event, resetTimer);
-      });
+      clearInterval(intervalId);
+      removeActivityListeners();
     };
   }, [user]);
   
