@@ -55,45 +55,28 @@ const Transactions = () => {
   const updateSelectedUser = async () => {
     if (!selectedUser) return;
     setSavingUser(true);
-    const { id, name, mobile, address, gender, balance_points, center_name } = selectedUser;
-
-    // Fetch previous balance to log transaction if balance changed
-    const { data: previousData } = await supabase
-      .from('profiles')
-      .select('balance_points')
-      .eq('id', id)
-      .single();
-
-    const oldBalance = previousData?.balance_points ?? 0;
+    const { id, name, mobile, address, balance_points, center_name } = selectedUser;
     const newBalance = parseInt(balance_points) || 0;
-    const diff = newBalance - oldBalance;
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({ name, mobile, address, gender, balance_points: newBalance, center_name })
-      .eq('id', id);
+    // Use atomic stored procedure to update profile & balance with transaction record
+    const { data, error } = await supabase.rpc('admin_update_profile', {
+      p_user_id: id,
+      p_name: name,
+      p_mobile: mobile,
+      p_address: address,
+      p_center_name: center_name,
+      p_new_balance: newBalance
+    });
 
-    if (error) {
-      console.error('Error updating user:', error);
-      alert('Error updating user: ' + error.message);
+    if (error || !data?.success) {
+      console.error('Error updating user:', error || data?.error);
+      alert('Error updating user: ' + (error?.message || data?.error));
       setSavingUser(false);
       return;
     }
 
-    if (diff !== 0) {
-      await supabase.from('transactions').insert({
-        user_id: id,
-        type: diff > 0 ? 'credit' : 'debit',
-        amount: Math.abs(diff),
-        balance_after: newBalance,
-        description: diff > 0
-          ? `Credited by admin (+${diff} Rs)`
-          : `Debited by admin (${diff} Rs)`,
-      });
-      // Refresh transactions table so balance changes reflect immediately
-      fetchTransactions();
-    }
-
+    // Refresh transactions table so any logged balance transaction reflects immediately
+    fetchTransactions();
     setSavingUser(false);
     setSelectedUser(null);
   };

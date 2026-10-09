@@ -157,76 +157,63 @@ export const AuthProvider = ({ children }) => {
 
 
   // ------------------------------------------------
-  // Balance Points Handlers
+  // Balance Points Handlers (ACID Compliant via Postgres RPC)
   // ------------------------------------------------
   const deductPoints = async (pointsToDeduct, description = '') => {
     if (!profile || profile.role === 'admin') return true;
-    
+
     if (profile.balance_points < pointsToDeduct) {
       return false; // Not enough points
     }
 
-    const newBalance = profile.balance_points - pointsToDeduct;
-    const { error } = await supabase
-      .from("profiles")
-      .update({ balance_points: newBalance })
-      .eq("id", profile.id);
+    try {
+      // Execute atomic transaction in PostgreSQL (Atomicity + Consistency + Row Lock)
+      const { data, error } = await supabase.rpc('deduct_user_points', {
+        p_user_id: profile.id,
+        p_points: pointsToDeduct,
+        p_description: description || 'Points deducted',
+      });
 
-    if (error) {
-      console.error("Error deducting points:", error);
+      if (error) {
+        console.error("RPC deduct_user_points error:", error);
+        return false;
+      }
+
+      if (!data?.success) {
+        console.warn("Deduction failed:", data?.error);
+        return false;
+      }
+
+      setProfile((prev) => ({ ...prev, balance_points: data.new_balance }));
+      return true;
+    } catch (err) {
+      console.error("Error in deductPoints:", err);
       return false;
     }
-
-    // Log transaction
-    await supabase.from("transactions").insert({
-      user_id:       profile.id,
-      type:          'debit',
-      amount:        pointsToDeduct,
-      balance_after: newBalance,
-      description:   description || 'Points deducted',
-    });
-
-    setProfile({ ...profile, balance_points: newBalance });
-    return true;
   };
 
   const updateBalancePoints = async (userId, pointsToAdd, description = '') => {
-    // Only fetch current points and add, for admin use
-    const { data: userProfile, error: fetchError } = await supabase
-      .from("profiles")
-      .select("balance_points")
-      .eq("id", userId)
-      .single();
+    try {
+      // Execute atomic adjustment in PostgreSQL
+      const { data, error } = await supabase.rpc('adjust_user_balance', {
+        p_user_id: userId,
+        p_points_diff: pointsToAdd,
+        p_description: description || undefined,
+      });
 
-    if (fetchError) {
-      console.error("Error fetching user profile:", fetchError);
+      if (error) {
+        console.error("RPC adjust_user_balance error:", error);
+        return false;
+      }
+
+      return data?.success ?? false;
+    } catch (err) {
+      console.error("Error updating points:", err);
       return false;
     }
-
-    const newBalance = (userProfile.balance_points || 0) + pointsToAdd;
-    const { error } = await supabase
-      .from("profiles")
-      .update({ balance_points: newBalance })
-      .eq("id", userId);
-
-    if (error) {
-      console.error("Error updating points:", error);
-      return false;
-    }
-
-    // Log transaction
-    await supabase.from("transactions").insert({
-      user_id:       userId,
-      type:          'credit',
-      amount:        pointsToAdd,
-      balance_after: newBalance,
-      description:   description || 'Points credited by admin',
-    });
-
-    return true;
   };
 
-   return (
+  return (
     <AuthContext.Provider
       value={{ user, profile, loading, login, logout, signup, deductPoints, updateBalancePoints, setProfile }}
     >
