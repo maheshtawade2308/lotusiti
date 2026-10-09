@@ -332,7 +332,7 @@ export default function UserList() {
         {/* EDIT MODAL */}
         {editUser && (
           <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-            <div className="modal-dialog">
+            <div className="modal-dialog modal-dialog-centered">
               <div className="modal-content">
 
                 <div className="modal-header">
@@ -412,7 +412,7 @@ export default function UserList() {
         {/* ADD USER MODAL — reuses RegisterUser component */}
         {showAddUser && (
           <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-            <div className="modal-dialog modal-lg">
+            <div className="modal-dialog modal-dialog-centered modal-lg">
               <div className="modal-content">
 
                 <div className="modal-header">
