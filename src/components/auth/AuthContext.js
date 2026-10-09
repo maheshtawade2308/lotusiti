@@ -27,6 +27,43 @@ export const AuthProvider = ({ children }) => {
       listener.subscription.unsubscribe();
     };
   }, []);
+
+  // ------------------------------
+  // 20 Minutes Inactivity Session Timeout
+  // ------------------------------
+  useEffect(() => {
+    if (!user) return;
+
+    const SESSION_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutes
+    let timeoutId;
+
+    const handleSessionTimeout = async () => {
+      alert("तुमचे सत्र (Session) २० मिनिटांच्या निष्क्रियतेमुळे संपले आहे. कृपया पुन्हा लॉगिन करा.");
+      await logout();
+      window.location.href = "/";
+    };
+
+    const resetTimer = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleSessionTimeout, SESSION_TIMEOUT_MS);
+    };
+
+    // User activity events to reset timeout timer
+    const activityEvents = ["mousemove", "mousedown", "keydown", "touchstart", "scroll", "click"];
+    activityEvents.forEach((event) => {
+      window.addEventListener(event, resetTimer);
+    });
+
+    // Start timer initially
+    resetTimer();
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      activityEvents.forEach((event) => {
+        window.removeEventListener(event, resetTimer);
+      });
+    };
+  }, [user]);
   
   // Load profile
   useEffect(() => {
